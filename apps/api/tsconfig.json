@@ -1,0 +1,10 @@
+{
+  "extends": "@atlas/config/tsconfig.node.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "dist",
+    "noEmit": true,
+    "allowImportingTsExtensions": false
+  },
+  "include": ["src/**/*.ts", "prisma/**/*.ts"]
+}

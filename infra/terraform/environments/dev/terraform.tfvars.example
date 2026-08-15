@@ -1,0 +1,4 @@
+region      = "us-east-1"
+db_password = "change-me-use-a-strong-secret"
+web_origin  = "https://your-atlas.vercel.app"
+image_tag   = "latest"

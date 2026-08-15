@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-sans: ui-sans-serif, system-ui, sans-serif;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  @apply bg-parchment text-ink antialiased;
+}
+
+/* Browser surfaces themed from the palette (ink / parchment / brass). */
+::selection {
+  background: #d8b25a;
+  color: #081521;
+}
+
+:focus-visible {
+  outline: 2px solid #d8b25a;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Custom scrollbar so the chrome belongs to the design, not the OS. */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(18, 16, 14, 0.35) transparent;
+}
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+*::-webkit-scrollbar-thumb {
+  background: rgba(18, 16, 14, 0.3);
+  border-radius: 999px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(18, 16, 14, 0.5);
+  background-clip: content-box;
+}
