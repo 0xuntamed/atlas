@@ -33,15 +33,39 @@ export default function WorldGlobe({ states }: { states: StateMap }) {
     return () => ro.disconnect();
   }, []);
 
-  // Gentle auto-rotation + a framed starting view.
+  // Gentle auto-rotation + a framed starting view. Rotation (and its perpetual
+  // render loop) is paused whenever the tab is hidden or the globe is scrolled
+  // out of view, so it never burns CPU in the background.
   useEffect(() => {
     const g = globeRef.current;
-    if (!g) return;
+    if (!g || size.width === 0) return;
     g.pointOfView({ lat: 20, lng: 10, altitude: 2.4 }, 0);
     const controls = g.controls();
-    controls.autoRotate = true;
     controls.autoRotateSpeed = 0.45;
     controls.enableZoom = true;
+
+    let inView = true;
+    const apply = () => {
+      controls.autoRotate = inView && !document.hidden;
+    };
+    apply();
+
+    const onVisibility = () => apply();
+    document.addEventListener("visibilitychange", onVisibility);
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry?.isIntersecting ?? true;
+        apply();
+      },
+      { threshold: 0.05 },
+    );
+    if (wrapRef.current) io.observe(wrapRef.current);
+
+    return () => {
+      document.removeEventListener("visibilitychange", onVisibility);
+      io.disconnect();
+    };
   }, [size.width]);
 
   const capColor = useMemo(
