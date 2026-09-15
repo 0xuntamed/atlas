@@ -11,6 +11,7 @@ import type {
   CreateTripInput,
   CreateTripDayInput,
   CreateTripPlaceInput,
+  CreateExpenseInput,
   UpdateTripInput,
   UpdateTripPlaceInput,
 } from "@atlas/types";
@@ -19,11 +20,13 @@ import type {
   TripDayDTO,
   TripPlaceDTO,
   TripWithItinerary,
+  ExpenseDTO,
 } from "./types";
 
 const keys = {
   trips: ["trips"] as const,
   trip: (id: string) => ["trips", id] as const,
+  expenses: (id: string) => ["trips", id, "expenses"] as const,
 };
 
 // Token-bound API caller shared with the discovery hooks.
@@ -155,5 +158,40 @@ export function useDeletePlace(tripId: string) {
     mutationFn: (placeId: string) =>
       call<void>(`/api/trip-places/${placeId}`, { method: "DELETE" }),
     onSuccess: () => qc.invalidateQueries({ queryKey: keys.trip(tripId) }),
+  });
+}
+
+/* ── Expenses ── */
+
+export function useExpenses(tripId: string) {
+  const call = useApi();
+  return useQuery({
+    queryKey: keys.expenses(tripId),
+    // apiFetch unwraps the `{ data }` envelope; totals are derived client-side.
+    queryFn: () => call<ExpenseDTO[]>(`/api/trips/${tripId}/expenses`),
+    enabled: Boolean(tripId),
+  });
+}
+
+export function useAddExpense(tripId: string) {
+  const call = useApi();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (input: CreateExpenseInput) =>
+      call<ExpenseDTO>(`/api/trips/${tripId}/expenses`, {
+        method: "POST",
+        body: input,
+      }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.expenses(tripId) }),
+  });
+}
+
+export function useDeleteExpense(tripId: string) {
+  const call = useApi();
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (expenseId: string) =>
+      call<void>(`/api/expenses/${expenseId}`, { method: "DELETE" }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: keys.expenses(tripId) }),
   });
 }

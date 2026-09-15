@@ -9,6 +9,7 @@ import { healthRoutes } from "./modules/health/health.routes";
 import { tripRoutes } from "./modules/trips/trip.routes";
 import { tripDayRoutes } from "./modules/trip-days/trip-day.routes";
 import { tripPlaceRoutes } from "./modules/trip-places/trip-place.routes";
+import { expenseRoutes } from "./modules/expenses/expense.routes";
 import { countryRoutes } from "./modules/countries/country.routes";
 import { placesRoutes } from "./modules/places/places.routes";
 import { weatherRoutes } from "./modules/weather/weather.routes";
@@ -87,6 +88,7 @@ export async function buildApp(): Promise<FastifyInstance> {
   await app.register(tripRoutes, { prefix: "/api/trips" });
   await app.register(tripDayRoutes, { prefix: "/api" });
   await app.register(tripPlaceRoutes, { prefix: "/api" });
+  await app.register(expenseRoutes, { prefix: "/api" });
   await app.register(savedPlaceRoutes, { prefix: "/api/saved-places" });
   await app.register(mapRoutes, { prefix: "/api/map" });
   await app.register(passportRoutes, { prefix: "/api/passport" });

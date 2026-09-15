@@ -32,6 +32,10 @@ import type {
 } from "@/lib/types";
 import { pointsToArcs, tripToPoints } from "@/lib/geo";
 import { PassportStamp } from "@/components/passport-stamp";
+import { ExpensesPanel } from "@/components/trip/expenses-panel";
+
+type TripView = "journey" | "map" | "expenses";
+const TRIP_VIEWS: TripView[] = ["journey", "map", "expenses"];
 
 const TripGlobe = dynamic(() => import("@/components/globe/trip-globe"), {
   ssr: false,
@@ -56,7 +60,9 @@ function TripDetail() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
-  const view = searchParams.get("view") === "map" ? "map" : "journey";
+  const viewParam = searchParams.get("view");
+  const view: TripView =
+    viewParam === "map" || viewParam === "expenses" ? viewParam : "journey";
 
   const { data: trip, isLoading, isError, error } = useTrip(tripId);
   const addDay = useAddDay(tripId);
@@ -64,8 +70,8 @@ function TripDetail() {
   const country = useCountry(trip?.countryCode ?? "");
   const [celebrate, setCelebrate] = useState(false);
 
-  const setView = (next: "journey" | "map") =>
-    router.replace(next === "map" ? `${pathname}?view=map` : pathname, {
+  const setView = (next: TripView) =>
+    router.replace(next === "journey" ? pathname : `${pathname}?view=${next}`, {
       scroll: false,
     });
 
@@ -137,6 +143,8 @@ function TripDetail() {
 
       {view === "map" ? (
         <TripMapView trip={trip} />
+      ) : view === "expenses" ? (
+        <ExpensesPanel tripId={tripId} />
       ) : trip.days.length === 0 ? (
         <p className="rounded-xl border border-dashed border-ink/20 p-8 text-center text-ink/60">
           No days yet. Add your first day to start building the itinerary.
@@ -220,12 +228,12 @@ function ViewToggle({
   view,
   onChange,
 }: {
-  view: "journey" | "map";
-  onChange: (v: "journey" | "map") => void;
+  view: TripView;
+  onChange: (v: TripView) => void;
 }) {
   return (
     <div className="inline-flex rounded-full border border-ink/15 bg-white/50 p-0.5 text-sm">
-      {(["journey", "map"] as const).map((v) => (
+      {TRIP_VIEWS.map((v) => (
         <button
           key={v}
           onClick={() => onChange(v)}

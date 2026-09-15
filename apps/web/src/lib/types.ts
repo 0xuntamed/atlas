@@ -7,6 +7,8 @@ import type {
   DiscoveredPlaceDTO,
   WeatherDTO,
   SavedPlaceDTO,
+  ExpenseDTO,
+  ExpenseTotal,
 } from "@atlas/types";
 
 export type {
@@ -18,6 +20,8 @@ export type {
   DiscoveredPlaceDTO,
   WeatherDTO,
   SavedPlaceDTO,
+  ExpenseDTO,
+  ExpenseTotal,
 };
 
 export type TripDayWithPlaces = TripDayDTO & { places: TripPlaceDTO[] };

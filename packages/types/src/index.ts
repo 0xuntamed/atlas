@@ -4,6 +4,7 @@ export * from "./error";
 export * from "./trip";
 export * from "./trip-day";
 export * from "./trip-place";
+export * from "./expense";
 export * from "./country";
 export * from "./place";
 export * from "./weather";
