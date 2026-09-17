@@ -9,6 +9,7 @@ import {
 import Link from "next/link";
 import { Suspense, useEffect, useRef, useState } from "react";
 import dynamic from "next/dynamic";
+import clsx from "clsx";
 import {
   AnimatePresence,
   Reorder,
@@ -30,18 +31,32 @@ import type {
   TripPlaceDTO,
   TripWithItinerary,
 } from "@/lib/types";
-import { pointsToArcs, tripToPoints } from "@/lib/geo";
+import { formatCoordinates, pointsToArcs, tripToPoints } from "@/lib/geo";
 import { PassportStamp } from "@/components/passport-stamp";
 import { ExpensesPanel } from "@/components/trip/expenses-panel";
+import { TripStatusMark, TRIP_STATUS_LABEL } from "@/components/trip/status-mark";
+import {
+  Button,
+  ButtonLink,
+  EmptyState,
+  Note,
+  PageHeader,
+  Plate,
+} from "@/components/ui/primitives";
+import { Check, Close, Grip, Plus } from "@/components/ui/icons";
 
 type TripView = "journey" | "map" | "expenses";
-const TRIP_VIEWS: TripView[] = ["journey", "map", "expenses"];
+const TRIP_VIEWS: { key: TripView; label: string }[] = [
+  { key: "journey", label: "Journey" },
+  { key: "map", label: "Map" },
+  { key: "expenses", label: "Ledger" },
+];
 
 const TripGlobe = dynamic(() => import("@/components/globe/trip-globe"), {
   ssr: false,
   loading: () => (
-    <div className="flex h-full items-center justify-center text-parchment/60">
-      Loading map…
+    <div className="flex h-full items-center justify-center font-mono text-[0.68rem] uppercase tracking-label text-parchment/60">
+      Plotting the route…
     </div>
   ),
 });
@@ -52,6 +67,21 @@ export default function TripDetailPage() {
       <TripDetail />
     </Suspense>
   );
+}
+
+function formatRange(start: string | null, end: string | null) {
+  if (!start) return null;
+  const s = new Date(start).toLocaleDateString(undefined, {
+    day: "2-digit",
+    month: "short",
+  });
+  if (!end) return s;
+  const e = new Date(end).toLocaleDateString(undefined, {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+  return `${s} — ${e}`;
 }
 
 function TripDetail() {
@@ -81,63 +111,80 @@ function TripDetail() {
       { onSuccess: () => setCelebrate(true) },
     );
 
-  if (isLoading) return <p className="text-ink/60">Loading trip…</p>;
+  if (isLoading) return <Note>Opening the log…</Note>;
   if (isError)
     return (
-      <p className="text-red-700">
+      <Note tone="error">
         {(error as Error).message}{" "}
         <Link href="/trips" className="underline">
           Back to trips
         </Link>
-      </p>
+      </Note>
     );
   if (!trip) return null;
 
   const isCompleted = trip.status === "COMPLETED";
+  const range = formatRange(trip.startDate, trip.endDate);
+  const placeCount = trip.days.reduce((n, d) => n + d.places.length, 0);
 
   return (
     <section className="space-y-8">
-      <div>
-        <Link href="/trips" className="text-sm text-ink/50 hover:underline">
-          ← All trips
-        </Link>
-        <div className="mt-2 flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-4xl font-semibold tracking-tight">
-              {trip.title}
-            </h1>
-            <p className="mt-1 text-sm text-ink/60">
-              {trip.countryCode} · {trip.status.toLowerCase()}
-            </p>
-          </div>
-          {isCompleted ? (
-            <span className="shrink-0 rounded-full bg-emerald-800/10 px-3 py-1.5 text-sm font-medium text-emerald-800">
-              ✓ Completed
+      <PageHeader
+        back={{ href: "/trips", label: "All trips" }}
+        corner={
+          country.data?.latitude != null && country.data?.longitude != null
+            ? formatCoordinates(country.data.latitude, country.data.longitude)
+            : undefined
+        }
+        title={trip.title}
+        marginalia={
+          <>
+            {country.data?.name ?? trip.countryCode}
+            {" · "}
+            {TRIP_STATUS_LABEL[trip.status]}
+            {range && ` · ${range}`}
+          </>
+        }
+        action={
+          isCompleted ? (
+            <span className="inline-flex items-center gap-2 border border-visited/50 px-3 py-2 font-mono text-[0.68rem] uppercase tracking-label text-ink/80">
+              <Check size={14} className="text-visited" />
+              Completed
             </span>
           ) : (
-            <button
+            <Button
+              variant="primary"
+              cartouche
               onClick={complete}
               disabled={updateTrip.isPending}
-              className="shrink-0 rounded-full border border-ink/20 px-4 py-2 text-sm font-medium hover:bg-ink/5 disabled:opacity-50"
             >
-              {updateTrip.isPending ? "Completing…" : "Mark completed"}
-            </button>
-          )}
-        </div>
-      </div>
+              {updateTrip.isPending ? "Stamping…" : "Mark completed"}
+            </Button>
+          )
+        }
+      />
 
-      <div className="flex items-center justify-between">
-        <ViewToggle view={view} onChange={setView} />
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <ViewTabs view={view} onChange={setView} />
         {view === "journey" && (
-          <button
-            onClick={() =>
-              addDay.mutate({ title: `Day ${(trip.days.length ?? 0) + 1}` })
-            }
-            disabled={addDay.isPending}
-            className="rounded-full border border-ink/20 px-4 py-2 text-sm font-medium disabled:opacity-50"
-          >
-            + Add day
-          </button>
+          <div className="flex items-center gap-4">
+            {trip.days.length > 0 && (
+              <span className="hidden font-mono text-[0.62rem] uppercase tracking-label text-ink/60 sm:block">
+                {trip.days.length} {trip.days.length === 1 ? "day" : "days"} ·{" "}
+                {placeCount} {placeCount === 1 ? "place" : "places"}
+              </span>
+            )}
+            <Button
+              size="sm"
+              onClick={() =>
+                addDay.mutate({ title: `Day ${(trip.days.length ?? 0) + 1}` })
+              }
+              disabled={addDay.isPending}
+            >
+              <Plus size={12} />
+              Add day
+            </Button>
+          </div>
         )}
       </div>
 
@@ -146,13 +193,24 @@ function TripDetail() {
       ) : view === "expenses" ? (
         <ExpensesPanel tripId={tripId} />
       ) : trip.days.length === 0 ? (
-        <p className="rounded-xl border border-dashed border-ink/20 p-8 text-center text-ink/60">
-          No days yet. Add your first day to start building the itinerary.
-        </p>
+        <EmptyState
+          title="No days written yet"
+          body="Add your first day to start laying out the itinerary — places, notes, the order you'll take them."
+          action={
+            <Button
+              variant="primary"
+              cartouche
+              onClick={() => addDay.mutate({ title: "Day 1" })}
+              disabled={addDay.isPending}
+            >
+              Add day one
+            </Button>
+          }
+        />
       ) : (
-        <ol className="space-y-6">
+        <ol className="border-t border-ink/15">
           {trip.days.map((day, i) => (
-            <DayCard key={day.id} tripId={tripId} day={day} index={i} />
+            <DayEntry key={day.id} tripId={tripId} day={day} index={i} />
           ))}
         </ol>
       )}
@@ -188,17 +246,17 @@ function CompletionOverlay({
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       onClick={onClose}
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-black/60 backdrop-blur-sm"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-6 bg-chart/80 backdrop-blur-sm"
     >
       <motion.p
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3 }}
-        className="text-sm uppercase tracking-[0.3em] text-parchment/80"
+        className="font-mono text-[0.72rem] uppercase tracking-[0.3em] text-brass-bright"
       >
-        Trip completed
+        Trip completed · stamped
       </motion.p>
-      <div className="rounded-3xl bg-parchment p-8 shadow-2xl">
+      <div className="relative bg-parchment p-8 shadow-[0_24px_60px_-20px_rgba(0,0,0,0.6)]">
         <PassportStamp stamp={stamp} size="lg" />
       </div>
       <motion.div
@@ -207,24 +265,24 @@ function CompletionOverlay({
         transition={{ delay: 0.9 }}
         className="flex gap-3"
       >
-        <Link
+        <ButtonLink
           href="/passport"
-          className="rounded-full bg-parchment px-5 py-2 text-sm font-medium text-ink"
+          className="bg-brass-bright text-chart hover:bg-brass-light"
         >
-          View passport
-        </Link>
-        <button
+          Open passport
+        </ButtonLink>
+        <Button
           onClick={onClose}
-          className="rounded-full border border-parchment/40 px-5 py-2 text-sm font-medium text-parchment"
+          className="border-parchment/40 text-parchment hover:border-parchment hover:text-parchment"
         >
           Close
-        </button>
+        </Button>
       </motion.div>
     </motion.div>
   );
 }
 
-function ViewToggle({
+function ViewTabs({
   view,
   onChange,
 }: {
@@ -232,19 +290,31 @@ function ViewToggle({
   onChange: (v: TripView) => void;
 }) {
   return (
-    <div className="inline-flex rounded-full border border-ink/15 bg-white/50 p-0.5 text-sm">
-      {TRIP_VIEWS.map((v) => (
-        <button
-          key={v}
-          onClick={() => onChange(v)}
-          className={
-            "rounded-full px-4 py-1.5 font-medium capitalize transition " +
-            (view === v ? "bg-ink text-parchment" : "text-ink/60")
-          }
-        >
-          {v}
-        </button>
-      ))}
+    <div role="tablist" className="flex gap-1 border-b border-ink/15">
+      {TRIP_VIEWS.map((v) => {
+        const active = view === v.key;
+        return (
+          <button
+            key={v.key}
+            role="tab"
+            aria-selected={active}
+            onClick={() => onChange(v.key)}
+            className={clsx(
+              "relative -mb-px px-3 py-2 font-mono text-[0.68rem] font-medium uppercase tracking-label transition",
+              active ? "text-brass-ink" : "text-ink/70 hover:text-ink",
+            )}
+          >
+            {v.label}
+            <span
+              aria-hidden
+              className={clsx(
+                "absolute inset-x-3 bottom-0 h-px bg-brass-ink transition-opacity",
+                active ? "opacity-100" : "opacity-0",
+              )}
+            />
+          </button>
+        );
+      })}
     </div>
   );
 }
@@ -258,30 +328,47 @@ function TripMapView({ trip }: { trip: TripWithItinerary }) {
 
   if (points.length === 0) {
     return (
-      <p className="rounded-xl border border-dashed border-ink/20 p-8 text-center text-ink/60">
-        No mapped places yet. Add places with a location — e.g. from{" "}
-        <Link href="/countries" className="underline">
-          Explore
-        </Link>{" "}
-        — to see your route on the globe.
-      </p>
+      <EmptyState
+        title="Nothing to plot yet"
+        body={
+          <>
+            Add places with a location — for example from{" "}
+            <Link href="/countries" className="underline hover:text-brass-ink">
+              Explore
+            </Link>{" "}
+            — and your route will be drawn across the globe.
+          </>
+        }
+      />
     );
   }
 
   return (
-    <div className="space-y-2">
-      <div className="relative h-[62vh] w-full overflow-hidden rounded-3xl bg-[#0a0e13]">
+    <div className="space-y-3">
+      <Plate tone="chart" padded={false} className="h-[62vh] w-full overflow-hidden">
         <TripGlobe points={points} arcs={arcs} />
-      </div>
-      <p className="text-xs text-ink/50">
-        {points.length} places · {arcs.length} legs
-        {skipped > 0 && ` · ${skipped} without a location not shown`}
-      </p>
+      </Plate>
+      <dl className="flex flex-wrap gap-x-6 gap-y-1 font-mono text-[0.62rem] uppercase tracking-label text-ink/60">
+        <div className="flex gap-2">
+          <dt>Places</dt>
+          <dd className="tabular-nums text-ink">{points.length}</dd>
+        </div>
+        <div className="flex gap-2">
+          <dt>Legs</dt>
+          <dd className="tabular-nums text-ink">{arcs.length}</dd>
+        </div>
+        {skipped > 0 && (
+          <div className="flex gap-2">
+            <dt>Unlocated</dt>
+            <dd className="tabular-nums text-ink">{skipped}</dd>
+          </div>
+        )}
+      </dl>
     </div>
   );
 }
 
-function DayCard({
+function DayEntry({
   tripId,
   day,
   index,
@@ -318,15 +405,15 @@ function DayCard({
     });
   };
 
-  const label =
-    day.title ??
-    (day.date
-      ? new Date(day.date).toLocaleDateString(undefined, {
-          weekday: "long",
-          day: "numeric",
-          month: "short",
-        })
-      : `Day ${String(index + 1).padStart(2, "0")}`);
+  const ordinal = `Day ${String(index + 1).padStart(2, "0")}`;
+  const dateLabel = day.date
+    ? new Date(day.date).toLocaleDateString(undefined, {
+        weekday: "short",
+        day: "2-digit",
+        month: "short",
+      })
+    : null;
+  const heading = day.title && day.title !== ordinal ? day.title : null;
 
   const submitPlace = (e: React.FormEvent) => {
     e.preventDefault();
@@ -338,69 +425,88 @@ function DayCard({
   };
 
   return (
-    <li className="rounded-2xl border border-ink/10 bg-white/40 p-5">
-      <div className="flex items-center justify-between">
-        <h3 className="text-xs font-semibold uppercase tracking-[0.15em] text-ink/50">
-          {label}
-        </h3>
+    <li className="grid gap-x-8 gap-y-3 border-b border-ink/15 py-6 sm:grid-cols-[9rem_1fr]">
+      {/* Margin column: the day's mark */}
+      <div className="flex items-baseline justify-between gap-3 sm:block">
+        <div>
+          <p className="font-mono text-[0.68rem] font-medium uppercase tracking-label text-brass-ink">
+            {ordinal}
+          </p>
+          {dateLabel && (
+            <p className="mt-1 font-mono text-[0.62rem] uppercase tracking-label text-ink/60">
+              {dateLabel}
+            </p>
+          )}
+          {heading && (
+            <p className="mt-1 text-sm font-medium text-ink/80">{heading}</p>
+          )}
+        </div>
         <button
           onClick={() => {
-            if (confirm("Delete this day and its places?"))
+            if (confirm("Remove this day and its places?"))
               deleteDay.mutate(day.id);
           }}
-          className="text-xs text-ink/40 hover:text-red-700"
+          className="font-mono text-[0.62rem] uppercase tracking-label text-ink/70 transition hover:text-[#9b2c2c] sm:mt-3"
         >
-          Remove day
+          Remove
         </button>
       </div>
 
-      {ordered.length > 0 ? (
-        <Reorder.Group
-          axis="y"
-          values={ordered}
-          onReorder={handleReorder}
-          as="ul"
-          className="mt-3 space-y-2"
-        >
-          {ordered.map((place) => (
-            <PlaceItem
-              key={place.id}
-              tripId={tripId}
-              place={place}
-              onDragEnd={persistOrder}
-            />
-          ))}
-        </Reorder.Group>
-      ) : (
-        <p className="mt-3 text-sm text-ink/40">No places yet.</p>
-      )}
+      {/* The day's places, ruled */}
+      <div>
+        {ordered.length > 0 ? (
+          <Reorder.Group
+            axis="y"
+            values={ordered}
+            onReorder={handleReorder}
+            as="ol"
+            className="divide-y divide-ink/10"
+          >
+            {ordered.map((place, i) => (
+              <PlaceRow
+                key={place.id}
+                tripId={tripId}
+                place={place}
+                index={i}
+                onDragEnd={persistOrder}
+              />
+            ))}
+          </Reorder.Group>
+        ) : (
+          <p className="py-2 text-sm text-ink/60">Nothing planned yet.</p>
+        )}
 
-      <form onSubmit={submitPlace} className="mt-3 flex gap-2">
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Add a place (e.g. Tokyo)"
-          className="flex-1 rounded-lg border border-ink/15 bg-white/60 px-3 py-2 text-sm"
-        />
-        <button
-          type="submit"
-          disabled={addPlace.isPending}
-          className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-parchment disabled:opacity-50"
-        >
-          Add
-        </button>
-      </form>
+        <form onSubmit={submitPlace} className="mt-2 flex items-end gap-3">
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Add a place — e.g. Tokyo"
+            aria-label={`Add a place to ${ordinal}`}
+            className="field text-sm"
+          />
+          <Button
+            type="submit"
+            size="sm"
+            disabled={addPlace.isPending || !name.trim()}
+            className="shrink-0"
+          >
+            Add
+          </Button>
+        </form>
+      </div>
     </li>
   );
 }
 
-function PlaceItem({
+function PlaceRow({
   tripId,
   place,
+  index,
   onDragEnd,
 }: {
   tripId: string;
   place: TripPlaceDTO;
+  index: number;
   onDragEnd: () => void;
 }) {
   const controls = useDragControls();
@@ -424,14 +530,17 @@ function PlaceItem({
       dragControls={controls}
       onDragEnd={onDragEnd}
       as="li"
-      className="flex items-center gap-2 rounded-lg bg-parchment/60 px-3 py-2"
+      className="group flex items-center gap-3 bg-parchment py-2.5"
     >
       <span
         onPointerDown={(e) => controls.start(e)}
         title="Drag to reorder"
-        className="cursor-grab select-none px-1 text-ink/30 hover:text-ink/60"
+        className="cursor-grab touch-none select-none text-ink/50 transition hover:text-ink/70 active:cursor-grabbing"
       >
-        ⠿
+        <Grip size={14} />
+      </span>
+      <span className="w-6 shrink-0 font-mono text-[0.62rem] tabular-nums text-ink/60">
+        {String(index + 1).padStart(2, "0")}
       </span>
       {editing ? (
         <input
@@ -446,21 +555,28 @@ function PlaceItem({
               setEditing(false);
             }
           }}
-          className="flex-1 rounded border border-ink/20 bg-white px-2 py-1 text-sm"
+          className="field flex-1 py-1 text-sm"
         />
       ) : (
         <button
           onClick={() => setEditing(true)}
-          className="flex-1 text-left text-sm"
+          title="Click to rename"
+          className="min-w-0 flex-1 truncate text-left text-sm transition hover:text-brass-ink"
         >
           {place.name}
+          {place.category && (
+            <span className="ml-2 font-mono text-[0.62rem] uppercase tracking-label text-ink/60">
+              {place.category}
+            </span>
+          )}
         </button>
       )}
       <button
         onClick={() => deletePlace.mutate(place.id)}
-        className="text-xs text-ink/40 hover:text-red-700"
+        aria-label={`Remove ${place.name}`}
+        className="p-1 text-ink/50 transition hover:text-[#9b2c2c]"
       >
-        ✕
+        <Close size={13} />
       </button>
     </Reorder.Item>
   );

@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "codex-grid-background",
+        "value": "*",
+        "files": [
+          "apps/web/src/app/globals.css"
+        ],
+        "createdAt": "2026-09-17T10:10:06.972Z",
+        "reason": "Claude decided: .chart-graticule is applied only to Plate tone=chart, the dark plate containing the react-globe.gl world map (/world, trip map) — a literal map surface, the exception the rule names; the page body carries no grid (removed after finish review)"
+      }
+    ]
+  }
+}

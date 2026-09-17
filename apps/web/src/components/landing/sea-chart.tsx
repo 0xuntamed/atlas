@@ -13,6 +13,11 @@ const CYAN = "#5fb0c4";
 const BRASS = "#d8b25a";
 const MAGENTA = "#ff5a8a";
 
+// Round emitted coordinates so server and client serialize identically
+// (raw doubles can differ in their last digit between the two and trigger a
+// hydration mismatch on every <line>).
+const r3 = (n: number) => Math.round(n * 1000) / 1000;
+
 // 32-point rhumb network, the signature of a portolan chart.
 function rhumbLines(cx: number, cy: number, r: number) {
   const lines = [];
@@ -21,8 +26,8 @@ function rhumbLines(cx: number, cy: number, r: number) {
     lines.push({
       x1: cx,
       y1: cy,
-      x2: cx + Math.cos(a) * r,
-      y2: cy + Math.sin(a) * r,
+      x2: r3(cx + Math.cos(a) * r),
+      y2: r3(cy + Math.sin(a) * r),
       major: i % 4 === 0,
     });
   }
@@ -35,14 +40,14 @@ function compassPoints(cx: number, cy: number, outer: number, inner: number) {
   for (let i = 0; i < 16; i++) {
     const a = (i / 16) * Math.PI * 2 - Math.PI / 2;
     const len = i % 4 === 0 ? outer : i % 2 === 0 ? outer * 0.72 : outer * 0.5;
-    const tip = [cx + Math.cos(a) * len, cy + Math.sin(a) * len];
+    const tip = [r3(cx + Math.cos(a) * len), r3(cy + Math.sin(a) * len)];
     const bl = [
-      cx + Math.cos(a - 0.09) * inner,
-      cy + Math.sin(a - 0.09) * inner,
+      r3(cx + Math.cos(a - 0.09) * inner),
+      r3(cy + Math.sin(a - 0.09) * inner),
     ];
     const br = [
-      cx + Math.cos(a + 0.09) * inner,
-      cy + Math.sin(a + 0.09) * inner,
+      r3(cx + Math.cos(a + 0.09) * inner),
+      r3(cy + Math.sin(a + 0.09) * inner),
     ];
     spikes.push({
       d: `M ${bl[0]} ${bl[1]} L ${tip[0]} ${tip[1]} L ${br[0]} ${br[1]} Z`,
@@ -171,10 +176,10 @@ export function SeaChart() {
           return (
             <line
               key={`t${i}`}
-              x1={rose.cx + Math.cos(a) * r1}
-              y1={rose.cy + Math.sin(a) * r1}
-              x2={rose.cx + Math.cos(a) * r2}
-              y2={rose.cy + Math.sin(a) * r2}
+              x1={r3(rose.cx + Math.cos(a) * r1)}
+              y1={r3(rose.cy + Math.sin(a) * r1)}
+              x2={r3(rose.cx + Math.cos(a) * r2)}
+              y2={r3(rose.cy + Math.sin(a) * r2)}
               stroke={BRASS}
               strokeWidth="0.5"
               opacity="0.4"

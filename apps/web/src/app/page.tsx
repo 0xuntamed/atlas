@@ -24,21 +24,10 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { Cinzel, JetBrains_Mono } from "next/font/google";
 import { motion } from "framer-motion";
 import { SeaChart } from "@/components/landing/sea-chart";
+import { display, mono } from "@/lib/fonts";
 import type { StateMap } from "@/lib/geo";
-
-const display = Cinzel({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-display",
-});
-const mono = JetBrains_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-mono",
-});
 
 const WorldGlobe = dynamic(() => import("@/components/globe/world-globe"), {
   ssr: false,

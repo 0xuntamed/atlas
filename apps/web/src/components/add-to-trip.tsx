@@ -4,6 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useAddDay, useAddPlace, useTrip, useTrips } from "@/lib/hooks";
 import type { DiscoveredPlaceDTO } from "@/lib/types";
+import { Button } from "@/components/ui/primitives";
+import { Check } from "@/components/ui/icons";
 
 /**
  * Compact picker to drop a discovered place into an itinerary: choose a trip,
@@ -48,80 +50,82 @@ export function AddToTrip({ place }: { place: DiscoveredPlaceDTO }) {
     return (
       <Link
         href={`/trips/${done}`}
-        className="text-xs font-medium text-emerald-700 hover:underline"
+        className="inline-flex items-center gap-1.5 font-mono text-[0.62rem] uppercase tracking-label text-brass-ink hover:underline"
       >
-        Added ✓ view trip
+        <Check size={12} />
+        Added · open trip
       </Link>
     );
   }
 
   if (!open) {
     return (
-      <button
-        onClick={() => setOpen(true)}
-        className="rounded-full border border-ink/20 px-3 py-1 text-xs font-medium hover:bg-ink/5"
-      >
+      <Button size="sm" onClick={() => setOpen(true)}>
         Add to trip
-      </button>
+      </Button>
     );
   }
 
   return (
-    <div className="flex flex-col gap-2 rounded-lg border border-ink/15 bg-white/70 p-2">
+    <div className="flex flex-wrap items-end gap-3 border-l border-brass/60 pl-3">
       {!trips || trips.length === 0 ? (
         <p className="text-xs text-ink/60">
           No trips yet.{" "}
-          <Link href="/trips/new" className="underline">
+          <Link href="/trips/new" className="underline hover:text-brass-ink">
             Create one
           </Link>
         </p>
       ) : (
         <>
-          <select
-            value={tripId}
-            onChange={(e) => {
-              setTripId(e.target.value);
-              setDayId("");
-            }}
-            className="rounded border border-ink/20 bg-white px-2 py-1 text-xs"
-          >
-            <option value="">Choose trip…</option>
-            {trips.map((t) => (
-              <option key={t.id} value={t.id}>
-                {t.title}
-              </option>
-            ))}
-          </select>
-
-          {tripId && trip && trip.days.length > 0 && (
+          <label className="block">
+            <span className="sr-only">Trip</span>
             <select
-              value={dayId}
-              onChange={(e) => setDayId(e.target.value)}
-              className="rounded border border-ink/20 bg-white px-2 py-1 text-xs"
+              value={tripId}
+              onChange={(e) => {
+                setTripId(e.target.value);
+                setDayId("");
+              }}
+              className="field w-40 py-1 text-xs"
             >
-              <option value="">First day (or pick)…</option>
-              {trip.days.map((d, i) => (
-                <option key={d.id} value={d.id}>
-                  {d.title ?? `Day ${i + 1}`}
+              <option value="">Choose trip…</option>
+              {trips.map((t) => (
+                <option key={t.id} value={t.id}>
+                  {t.title}
                 </option>
               ))}
             </select>
+          </label>
+
+          {tripId && trip && trip.days.length > 0 && (
+            <label className="block">
+              <span className="sr-only">Day</span>
+              <select
+                value={dayId}
+                onChange={(e) => setDayId(e.target.value)}
+                className="field w-36 py-1 text-xs"
+              >
+                <option value="">First day (or pick)…</option>
+                {trip.days.map((d, i) => (
+                  <option key={d.id} value={d.id}>
+                    {d.title ?? `Day ${i + 1}`}
+                  </option>
+                ))}
+              </select>
+            </label>
           )}
 
           <div className="flex gap-2">
-            <button
+            <Button
+              size="sm"
+              variant="primary"
               onClick={handleAdd}
               disabled={!tripId || busy}
-              className="rounded-full bg-ink px-3 py-1 text-xs font-medium text-parchment disabled:opacity-50"
             >
               {busy ? "Adding…" : "Add"}
-            </button>
-            <button
-              onClick={() => setOpen(false)}
-              className="rounded-full px-3 py-1 text-xs text-ink/60"
-            >
+            </Button>
+            <Button size="sm" variant="ghost" onClick={() => setOpen(false)}>
               Cancel
-            </button>
+            </Button>
           </div>
         </>
       )}

@@ -3,30 +3,44 @@
 import { motion } from "framer-motion";
 import { useProfileStats } from "@/lib/discovery-hooks";
 import { CountUp } from "@/components/count-up";
+import { Note, PageHeader, Plate } from "@/components/ui/primitives";
 
-function Stat({
-  value,
+const ease = [0.22, 1, 0.36, 1] as const;
+
+/**
+ * One line of the tally: a mono label, a dotted leader, and the figure set in
+ * engraved numerals. The count-up is the page's one authored moment.
+ */
+function TallyRow({
   label,
+  value,
   format,
   delay,
+  text,
 }: {
-  value: number;
   label: string;
+  value?: number;
   format?: (n: number) => string;
   delay: number;
+  text?: string;
 }) {
   return (
     <motion.div
-      initial={{ opacity: 0, y: 12 }}
+      initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 0.5, delay, ease }}
+      className="flex items-baseline gap-3 py-4"
     >
-      <div className="text-6xl font-semibold tracking-tight tabular-nums">
-        <CountUp value={value} format={format} />
-      </div>
-      <div className="mt-1 text-sm uppercase tracking-[0.2em] text-ink/50">
+      <dt className="shrink-0 font-mono text-[0.68rem] uppercase tracking-label text-ink/70">
         {label}
-      </div>
+      </dt>
+      <span
+        aria-hidden
+        className="mb-[0.35em] min-w-6 flex-1 border-b border-dotted border-ink/35"
+      />
+      <dd className="shrink-0 text-right font-display text-3xl font-semibold tabular-nums leading-none text-ink sm:text-4xl">
+        {text ?? <CountUp value={value ?? 0} format={format} />}
+      </dd>
     </motion.div>
   );
 }
@@ -34,51 +48,49 @@ function Stat({
 export default function ProfilePage() {
   const { data: stats, isLoading } = useProfileStats();
 
-  if (isLoading) return <p className="text-ink/60">Loading your world…</p>;
+  if (isLoading) return <Note>Adding it all up…</Note>;
   if (!stats) return null;
 
   return (
-    <section className="space-y-12">
-      <div>
-        <p className="text-sm uppercase tracking-[0.25em] text-ink/40">
-          Your world
-        </p>
-        <h1 className="mt-1 text-4xl font-semibold tracking-tight">
-          Travel profile
-        </h1>
-      </div>
+    <section className="space-y-8">
+      <PageHeader
+        corner="Sheet 04 · Tally"
+        title="Your world"
+        marginalia={
+          stats.tripsCompleted > 0
+            ? `${stats.tripsCompleted} ${stats.tripsCompleted === 1 ? "trip" : "trips"} completed · ${stats.distanceKm.toLocaleString()} km logged`
+            : "The tally of everywhere you've been"
+        }
+      />
 
-      <div className="grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-3">
-        <Stat value={stats.countriesVisited} label="Countries" delay={0.05} />
-        <Stat value={stats.citiesVisited} label="Cities" delay={0.1} />
-        <Stat value={stats.tripsCompleted} label="Trips completed" delay={0.15} />
-        <Stat
-          value={stats.distanceKm}
-          label="KM travelled"
-          format={(n) => n.toLocaleString()}
-          delay={0.2}
-        />
-        <Stat value={stats.upcomingTrips} label="Upcoming" delay={0.25} />
-        {stats.mostVisitedCountry && (
-          <motion.div
-            initial={{ opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <div className="text-3xl font-semibold tracking-tight">
-              {stats.mostVisitedCountry.name}
-            </div>
-            <div className="mt-1 text-sm uppercase tracking-[0.2em] text-ink/50">
-              Most visited
-            </div>
-          </motion.div>
-        )}
-      </div>
+      <Plate className="max-w-2xl">
+        <dl className="divide-y divide-ink/15">
+          <TallyRow label="Countries" value={stats.countriesVisited} delay={0.05} />
+          <TallyRow label="Cities" value={stats.citiesVisited} delay={0.1} />
+          <TallyRow
+            label="Trips completed"
+            value={stats.tripsCompleted}
+            delay={0.15}
+          />
+          <TallyRow
+            label="Distance"
+            value={stats.distanceKm}
+            format={(n) => `${n.toLocaleString()} km`}
+            delay={0.2}
+          />
+          <TallyRow label="Upcoming" value={stats.upcomingTrips} delay={0.25} />
+          {stats.mostVisitedCountry && (
+            <TallyRow
+              label="Most visited"
+              text={stats.mostVisitedCountry.name}
+              delay={0.3}
+            />
+          )}
+        </dl>
+      </Plate>
 
       {stats.tripsCompleted === 0 && (
-        <p className="text-sm text-ink/50">
-          Complete a trip to start filling in your world.
-        </p>
+        <Note>Complete a trip to start filling in your world.</Note>
       )}
     </section>
   );

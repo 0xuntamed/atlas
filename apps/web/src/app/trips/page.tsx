@@ -3,16 +3,24 @@
 import Link from "next/link";
 import { useDeleteTrip, useTrips } from "@/lib/hooks";
 import type { TripDTO } from "@/lib/types";
+import {
+  ButtonLink,
+  EmptyState,
+  Note,
+  PageHeader,
+} from "@/components/ui/primitives";
+import { ArrowRight, Close } from "@/components/ui/icons";
+import { TripStatusMark } from "@/components/trip/status-mark";
 
 function formatRange(trip: TripDTO): string {
   if (!trip.startDate) return "Dates not set";
   const start = new Date(trip.startDate).toLocaleDateString(undefined, {
-    day: "numeric",
+    day: "2-digit",
     month: "short",
   });
   if (!trip.endDate) return start;
   const end = new Date(trip.endDate).toLocaleDateString(undefined, {
-    day: "numeric",
+    day: "2-digit",
     month: "short",
     year: "numeric",
   });
@@ -23,77 +31,91 @@ export default function TripsPage() {
   const { data: trips, isLoading, isError, error } = useTrips();
   const deleteTrip = useDeleteTrip();
 
+  const completed = trips?.filter((t) => t.status === "COMPLETED").length ?? 0;
+
   return (
     <section className="space-y-8">
-      <div className="flex items-end justify-between">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">My Trips</h1>
-          <p className="text-sm text-ink/60">Everywhere you&apos;re going.</p>
-        </div>
-        <Link
-          href="/trips/new"
-          className="rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-parchment"
-        >
-          New trip
-        </Link>
-      </div>
+      <PageHeader
+        corner="Sheet 01 · Trips"
+        title="Trips"
+        marginalia={
+          trips
+            ? `${trips.length} ${trips.length === 1 ? "journey" : "journeys"} · ${completed} completed`
+            : "Everywhere you're going"
+        }
+        action={
+          <ButtonLink href="/trips/new" variant="primary" cartouche>
+            New trip
+          </ButtonLink>
+        }
+      />
 
-      {isLoading && <p className="text-ink/60">Loading trips…</p>}
+      {isLoading && <Note>Opening the log…</Note>}
 
       {isError && (
-        <p className="text-red-700">
+        <Note tone="error">
           Couldn&apos;t load trips: {(error as Error).message}
-        </p>
+        </Note>
       )}
 
       {trips && trips.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-ink/20 p-10 text-center">
-          <p className="text-lg font-medium">No trips yet</p>
-          <p className="mt-1 text-sm text-ink/60">
-            Start with your first journey.
-          </p>
-          <Link
-            href="/trips/new"
-            className="mt-4 inline-block rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-parchment"
-          >
-            Create a trip
-          </Link>
-        </div>
+        <EmptyState
+          title="The log is blank"
+          body="Every journey starts as a line in this book. Write the first one."
+          action={
+            <ButtonLink href="/trips/new" variant="primary" cartouche>
+              Create a trip
+            </ButtonLink>
+          }
+        />
       )}
 
-      <ul className="space-y-3">
-        {trips?.map((trip) => (
-          <li
-            key={trip.id}
-            className="flex items-center justify-between rounded-xl border border-ink/10 bg-white/40 px-5 py-4"
-          >
-            <Link href={`/trips/${trip.id}`} className="min-w-0 flex-1">
-              <div className="flex items-baseline gap-3">
-                <span className="truncate text-lg font-medium">
-                  {trip.title}
-                </span>
-                <span className="text-xs uppercase tracking-wide text-ink/40">
-                  {trip.countryCode}
-                </span>
-              </div>
-              <div className="mt-0.5 flex items-center gap-2 text-sm text-ink/60">
-                <span>{formatRange(trip)}</span>
-                <span aria-hidden>·</span>
-                <span>{trip.status.toLowerCase()}</span>
-              </div>
-            </Link>
-            <button
-              onClick={() => {
-                if (confirm(`Delete "${trip.title}"?`))
-                  deleteTrip.mutate(trip.id);
-              }}
-              className="ml-4 shrink-0 text-sm text-ink/50 hover:text-red-700"
+      {trips && trips.length > 0 && (
+        <ol className="border-t border-ink/15">
+          {trips.map((trip) => (
+            <li
+              key={trip.id}
+              className="group grid grid-cols-[1fr_auto] items-center gap-x-4 border-b border-ink/15 sm:grid-cols-[9rem_1fr_auto]"
             >
-              Delete
-            </button>
-          </li>
-        ))}
-      </ul>
+              <div className="hidden py-4 font-mono text-[0.68rem] uppercase tracking-label text-ink/70 sm:block">
+                {trip.countryCode}
+                <span className="mt-1 block normal-case tracking-normal text-ink/60">
+                  {formatRange(trip)}
+                </span>
+              </div>
+              <Link
+                href={`/trips/${trip.id}`}
+                className="flex min-w-0 items-center gap-3 py-4 transition hover:text-brass-ink"
+              >
+                <TripStatusMark status={trip.status} />
+                <span className="min-w-0">
+                  <span className="block truncate text-lg font-medium leading-tight">
+                    {trip.title}
+                  </span>
+                  <span className="mt-0.5 block font-mono text-[0.62rem] uppercase tracking-label text-ink/60 sm:hidden">
+                    {trip.countryCode} · {formatRange(trip)}
+                  </span>
+                </span>
+                <ArrowRight
+                  size={14}
+                  className="ml-auto shrink-0 text-ink/50 transition group-hover:translate-x-0.5 group-hover:text-brass-ink"
+                />
+              </Link>
+              <button
+                onClick={() => {
+                  if (confirm(`Delete "${trip.title}"?`))
+                    deleteTrip.mutate(trip.id);
+                }}
+                aria-label={`Delete ${trip.title}`}
+                title="Delete trip"
+                className="p-2 text-ink/50 transition hover:text-[#9b2c2c]"
+              >
+                <Close size={14} />
+              </button>
+            </li>
+          ))}
+        </ol>
+      )}
     </section>
   );
 }

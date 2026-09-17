@@ -4,6 +4,14 @@ import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { TripStatus } from "@atlas/types";
 import { useCreateTrip } from "@/lib/hooks";
+import {
+  Button,
+  Field,
+  Note,
+  PageHeader,
+  Plate,
+} from "@/components/ui/primitives";
+import { TRIP_STATUS_LABEL } from "@/components/trip/status-mark";
 
 export default function NewTripPage() {
   return (
@@ -42,113 +50,95 @@ function NewTripForm() {
   };
 
   return (
-    <section className="max-w-lg space-y-6">
-      <h1 className="text-3xl font-semibold tracking-tight">New trip</h1>
+    <section className="space-y-8">
+      <PageHeader
+        title="New trip"
+        marginalia="A new line in the log"
+        back={{ href: "/trips", label: "All trips" }}
+      />
 
-      <form onSubmit={onSubmit} className="space-y-4">
-        <Field label="Title">
-          <input
-            required
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            placeholder="Japan 2026"
-            className="input"
-          />
-        </Field>
-
-        <Field label="Country code (ISO alpha-2)">
-          <input
-            required
-            value={countryCode}
-            onChange={(e) => setCountryCode(e.target.value.toUpperCase())}
-            maxLength={2}
-            placeholder="JP"
-            className="input uppercase"
-          />
-        </Field>
-
-        <div className="grid grid-cols-2 gap-4">
-          <Field label="Start date">
+      <Plate className="max-w-xl">
+        <form onSubmit={onSubmit} className="space-y-6">
+          <Field label="Title">
             <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="input"
+              required
+              autoFocus
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              placeholder="Japan 2026"
+              className="field text-lg"
             />
           </Field>
-          <Field label="End date">
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="input"
-            />
-          </Field>
-        </div>
 
-        <Field label="Status">
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value as TripStatus)}
-            className="input"
-          >
-            {Object.values(TripStatus).map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-        </Field>
+          <div className="grid grid-cols-[8rem_1fr] gap-6">
+            <Field label="Country" hint="ISO code, e.g. JP">
+              <input
+                required
+                value={countryCode}
+                onChange={(e) =>
+                  setCountryCode(e.target.value.toUpperCase().slice(0, 2))
+                }
+                maxLength={2}
+                placeholder="JP"
+                className="field font-mono uppercase tracking-[0.2em]"
+              />
+            </Field>
 
-        {createTrip.isError && (
-          <p className="text-sm text-red-700">
-            {(createTrip.error as Error).message}
-          </p>
-        )}
+            <Field label="Status">
+              <select
+                value={status}
+                onChange={(e) => setStatus(e.target.value as TripStatus)}
+                className="field"
+              >
+                {Object.values(TripStatus).map((s) => (
+                  <option key={s} value={s}>
+                    {TRIP_STATUS_LABEL[s]}
+                  </option>
+                ))}
+              </select>
+            </Field>
+          </div>
 
-        <div className="flex gap-3 pt-2">
-          <button
-            type="submit"
-            disabled={createTrip.isPending}
-            className="rounded-full bg-ink px-6 py-3 text-sm font-medium text-parchment disabled:opacity-50"
-          >
-            {createTrip.isPending ? "Creating…" : "Create trip"}
-          </button>
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="rounded-full px-6 py-3 text-sm font-medium text-ink/60"
-          >
-            Cancel
-          </button>
-        </div>
-      </form>
+          <div className="grid grid-cols-2 gap-6">
+            <Field label="Departs">
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                className="field font-mono text-sm"
+              />
+            </Field>
+            <Field label="Returns">
+              <input
+                type="date"
+                value={endDate}
+                min={startDate || undefined}
+                onChange={(e) => setEndDate(e.target.value)}
+                className="field font-mono text-sm"
+              />
+            </Field>
+          </div>
 
-      <style jsx>{`
-        :global(.input) {
-          width: 100%;
-          border-radius: 0.5rem;
-          border: 1px solid rgb(18 16 14 / 0.15);
-          background: rgb(255 255 255 / 0.6);
-          padding: 0.625rem 0.75rem;
-          font-size: 0.95rem;
-        }
-      `}</style>
+          {createTrip.isError && (
+            <Note tone="error">{(createTrip.error as Error).message}</Note>
+          )}
+
+          <div className="flex items-center gap-4 pt-2">
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              cartouche
+              disabled={createTrip.isPending}
+            >
+              {createTrip.isPending ? "Writing…" : "Create trip"}
+            </Button>
+            <Button type="button" variant="ghost" onClick={() => router.back()}>
+              Cancel
+            </Button>
+          </div>
+        </form>
+      </Plate>
     </section>
-  );
-}
-
-function Field({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="block space-y-1.5">
-      <span className="text-sm font-medium text-ink/70">{label}</span>
-      {children}
-    </label>
   );
 }

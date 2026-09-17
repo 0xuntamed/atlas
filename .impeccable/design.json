@@ -1,0 +1,481 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-17T00:10:00Z",
+  "title": "Design System: ATLAS",
+  "extensions": {
+    "colorMeta": {
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink",
+        "canonical": "#12100e",
+        "tonalRamp": [
+          "oklch(15% 0.006 60)",
+          "oklch(27% 0.006 60)",
+          "oklch(38% 0.006 60)",
+          "oklch(50% 0.006 60)",
+          "oklch(61% 0.006 60)",
+          "oklch(72% 0.006 60)",
+          "oklch(84% 0.006 60)",
+          "oklch(95% 0.006 60)"
+        ]
+      },
+      "ink-raised": {
+        "role": "neutral",
+        "displayName": "Ink Raised",
+        "canonical": "#2a2622",
+        "tonalRamp": [
+          "oklch(15% 0.008 60)",
+          "oklch(27% 0.008 60)",
+          "oklch(38% 0.008 60)",
+          "oklch(50% 0.008 60)",
+          "oklch(61% 0.008 60)",
+          "oklch(72% 0.008 60)",
+          "oklch(84% 0.008 60)",
+          "oklch(95% 0.008 60)"
+        ]
+      },
+      "parchment": {
+        "role": "neutral",
+        "displayName": "Parchment",
+        "canonical": "#f6f3ec",
+        "tonalRamp": [
+          "oklch(15% 0.01 85)",
+          "oklch(27% 0.01 85)",
+          "oklch(38% 0.01 85)",
+          "oklch(50% 0.01 85)",
+          "oklch(61% 0.01 85)",
+          "oklch(72% 0.01 85)",
+          "oklch(84% 0.01 85)",
+          "oklch(96% 0.01 85)"
+        ]
+      },
+      "chart": {
+        "role": "neutral",
+        "displayName": "Chart Ground (deep prussian ink)",
+        "canonical": "#081521",
+        "tonalRamp": [
+          "oklch(15% 0.035 245)",
+          "oklch(27% 0.035 245)",
+          "oklch(38% 0.035 245)",
+          "oklch(50% 0.035 245)",
+          "oklch(61% 0.035 245)",
+          "oklch(72% 0.035 245)",
+          "oklch(84% 0.035 245)",
+          "oklch(95% 0.035 245)"
+        ]
+      },
+      "brass-bright": {
+        "role": "primary",
+        "displayName": "Bright Brass (dark ground only)",
+        "canonical": "#d8b25a",
+        "tonalRamp": [
+          "oklch(15% 0.11 85)",
+          "oklch(27% 0.11 85)",
+          "oklch(38% 0.11 85)",
+          "oklch(50% 0.11 85)",
+          "oklch(61% 0.11 85)",
+          "oklch(72% 0.11 85)",
+          "oklch(84% 0.11 85)",
+          "oklch(95% 0.11 85)"
+        ]
+      },
+      "brass-light": {
+        "role": "primary",
+        "displayName": "Brass Light (bright hover)",
+        "canonical": "#e6c976",
+        "tonalRamp": [
+          "oklch(15% 0.10 88)",
+          "oklch(27% 0.10 88)",
+          "oklch(38% 0.10 88)",
+          "oklch(50% 0.10 88)",
+          "oklch(61% 0.10 88)",
+          "oklch(72% 0.10 88)",
+          "oklch(84% 0.10 88)",
+          "oklch(95% 0.10 88)"
+        ]
+      },
+      "brass": {
+        "role": "primary",
+        "displayName": "Brass (rules and ticks)",
+        "canonical": "#a8853a",
+        "tonalRamp": [
+          "oklch(15% 0.11 80)",
+          "oklch(27% 0.11 80)",
+          "oklch(38% 0.11 80)",
+          "oklch(50% 0.11 80)",
+          "oklch(61% 0.11 80)",
+          "oklch(72% 0.11 80)",
+          "oklch(84% 0.11 80)",
+          "oklch(95% 0.11 80)"
+        ]
+      },
+      "brass-ink": {
+        "role": "primary",
+        "displayName": "Brass Ink (text on parchment)",
+        "canonical": "#7a5c1e",
+        "tonalRamp": [
+          "oklch(15% 0.09 78)",
+          "oklch(27% 0.09 78)",
+          "oklch(38% 0.09 78)",
+          "oklch(50% 0.09 78)",
+          "oklch(61% 0.09 78)",
+          "oklch(72% 0.09 78)",
+          "oklch(84% 0.09 78)",
+          "oklch(95% 0.09 78)"
+        ]
+      },
+      "graticule": {
+        "role": "secondary",
+        "displayName": "Graticule Cyan",
+        "canonical": "#5fb0c4",
+        "tonalRamp": [
+          "oklch(15% 0.08 215)",
+          "oklch(27% 0.08 215)",
+          "oklch(38% 0.08 215)",
+          "oklch(50% 0.08 215)",
+          "oklch(61% 0.08 215)",
+          "oklch(72% 0.08 215)",
+          "oklch(84% 0.08 215)",
+          "oklch(95% 0.08 215)"
+        ]
+      },
+      "signal": {
+        "role": "secondary",
+        "displayName": "Signal Magenta",
+        "canonical": "#ff5a8a",
+        "tonalRamp": [
+          "oklch(15% 0.20 358)",
+          "oklch(27% 0.20 358)",
+          "oklch(38% 0.20 358)",
+          "oklch(50% 0.20 358)",
+          "oklch(61% 0.20 358)",
+          "oklch(72% 0.20 358)",
+          "oklch(84% 0.20 358)",
+          "oklch(95% 0.20 358)"
+        ]
+      },
+      "visited": {
+        "role": "tertiary",
+        "displayName": "Visited Green",
+        "canonical": "#34d399",
+        "tonalRamp": [
+          "oklch(15% 0.15 165)",
+          "oklch(27% 0.15 165)",
+          "oklch(38% 0.15 165)",
+          "oklch(50% 0.15 165)",
+          "oklch(61% 0.15 165)",
+          "oklch(72% 0.15 165)",
+          "oklch(84% 0.15 165)",
+          "oklch(95% 0.15 165)"
+        ]
+      },
+      "planned": {
+        "role": "tertiary",
+        "displayName": "Planned Amber",
+        "canonical": "#fbbf24",
+        "tonalRamp": [
+          "oklch(15% 0.16 85)",
+          "oklch(27% 0.16 85)",
+          "oklch(38% 0.16 85)",
+          "oklch(50% 0.16 85)",
+          "oklch(61% 0.16 85)",
+          "oklch(72% 0.16 85)",
+          "oklch(84% 0.16 85)",
+          "oklch(95% 0.16 85)"
+        ]
+      },
+      "wishlist": {
+        "role": "tertiary",
+        "displayName": "Wishlist Violet",
+        "canonical": "#a78bfa",
+        "tonalRamp": [
+          "oklch(15% 0.14 295)",
+          "oklch(27% 0.14 295)",
+          "oklch(38% 0.14 295)",
+          "oklch(50% 0.14 295)",
+          "oklch(61% 0.14 295)",
+          "oklch(72% 0.14 295)",
+          "oklch(84% 0.14 295)",
+          "oklch(95% 0.14 295)"
+        ]
+      },
+      "danger-ink": {
+        "role": "tertiary",
+        "displayName": "Danger Ink (dried red)",
+        "canonical": "#9b2c2c",
+        "tonalRamp": [
+          "oklch(15% 0.15 25)",
+          "oklch(27% 0.15 25)",
+          "oklch(38% 0.15 25)",
+          "oklch(50% 0.15 25)",
+          "oklch(61% 0.15 25)",
+          "oklch(72% 0.15 25)",
+          "oklch(84% 0.15 25)",
+          "oklch(95% 0.15 25)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "wordmark": {
+        "displayName": "Wordmark",
+        "purpose": "The landing's ATLAS wordmark only; the header strip runs the same face at 1.15rem tracked 0.12em."
+      },
+      "display": {
+        "displayName": "Display",
+        "purpose": "The one engraved <h1> per sheet, set over the brass page rule."
+      },
+      "headline": {
+        "displayName": "Headline (engraved figure)",
+        "purpose": "Tally numerals and stamp codes — engraved, tabular."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Empty-state titles. Row titles in lists are body sans at 1.125rem/500."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Prose, notes and hints in the system sans; fields at 0.95rem."
+      },
+      "label": {
+        "displayName": "Label (mono marginalia)",
+        "purpose": "Section heads, table heads, field labels, nav, tabs, md buttons, back link, status words, marginalia dates — uppercase, tracked 0.18em. Middle step of the three-step mono ramp."
+      },
+      "figure": {
+        "displayName": "Figure",
+        "purpose": "Mono amounts, dates and counts in ledgers and rows; tabular numerals."
+      },
+      "marginalia": {
+        "displayName": "Marginalia",
+        "purpose": "The mono line under a page title and the lg button. Top step of the mono ramp (0.72rem)."
+      },
+      "labelSm": {
+        "displayName": "Label Sm",
+        "purpose": "Sheet-corner notes (tracked 0.12em), footer, sm buttons, list metadata, row indices, dev mark, stamp ENTRY line and date. Bottom step of the mono ramp (0.62rem)."
+      },
+      "field": {
+        "displayName": "Field",
+        "purpose": "Text inside ruled inputs, selects and textareas — 1rem so iOS Safari does not zoom a focused field."
+      }
+    },
+    "shadows": [
+      {
+        "name": "field-focus-rule",
+        "value": "0 1px 0 0 #7a5c1e",
+        "purpose": "The only box-shadow in the system: thickens the ruled field's bottom line on focus. Nothing else casts a shadow."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-journal",
+        "value": "cubic-bezier(0.22, 1, 0.36, 1)",
+        "purpose": "Exponential ease-out for every authored moment: template fade, tally stagger, row rise."
+      },
+      {
+        "name": "template-fade",
+        "value": "opacity 0→1, translateY 10px→0, 350ms ease-journal",
+        "purpose": "App-wide page transition on navigation (app/template.tsx)."
+      },
+      {
+        "name": "tally-stagger",
+        "value": "500ms ease-journal, 50ms step, 8px rise + count-up",
+        "purpose": "Profile tally rows — the sheet's one authored moment."
+      },
+      {
+        "name": "stamp-spring",
+        "value": "spring(stiffness 260, damping 15), scale 1.5–2.2→1, 60ms stagger",
+        "purpose": "Passport stamp pressing onto the page."
+      },
+      {
+        "name": "state-transition",
+        "value": "160ms ease",
+        "purpose": "Field rule/colour and hover colour changes."
+      },
+      {
+        "name": "compass-sweep",
+        "value": "rotate 360deg 2.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite",
+        "purpose": "Route-level loader; stops under prefers-reduced-motion."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "640px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button (cartouche)",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The one primary action per page: ink ground, mono label, four bright-brass corner ticks.",
+      "html": "<a class=\"ds-btn-primary ds-cartouche\" href=\"#\"><i class=\"ds-tick ds-tl\"></i><i class=\"ds-tick ds-tr\"></i><i class=\"ds-tick ds-bl\"></i><i class=\"ds-tick ds-br\"></i>New trip</a>",
+      "css": ".ds-btn-primary { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #12100e; color: #f6f3ec; padding: 10px 20px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; border: 0; border-radius: 0; transition: background-color 160ms ease; } .ds-btn-primary:hover { background: #2a2622; } .ds-btn-primary:focus-visible { outline: 2px solid #a8853a; outline-offset: 3px; border-radius: 2px; } .ds-btn-primary:disabled { opacity: .5; cursor: not-allowed; } .ds-tick { position: absolute; width: 10px; height: 10px; margin: -3px; border: 0 solid #d8b25a; pointer-events: none; } .ds-tl { left: 0; top: 0; border-left-width: 1px; border-top-width: 1px; } .ds-tr { right: 0; top: 0; border-right-width: 1px; border-top-width: 1px; } .ds-bl { left: 0; bottom: 0; border-left-width: 1px; border-bottom-width: 1px; } .ds-br { right: 0; bottom: 0; border-right-width: 1px; border-bottom-width: 1px; }"
+    },
+    {
+      "name": "Secondary Button",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Default control: ink hairline, mono label; turns brass-ink on hover.",
+      "html": "<button class=\"ds-btn-secondary\">Save changes</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: transparent; color: #12100e; padding: 10px 20px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; border: 1px solid rgba(18,16,14,.25); border-radius: 0; cursor: pointer; transition: color 160ms ease, border-color 160ms ease; } .ds-btn-secondary:hover { color: #7a5c1e; border-color: #7a5c1e; } .ds-btn-secondary:focus-visible { outline: 2px solid #a8853a; outline-offset: 3px; border-radius: 2px; } .ds-btn-secondary:disabled { opacity: .5; cursor: not-allowed; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Text-only control in ink/70; brass-ink on hover. The danger variant hovers to dried red.",
+      "html": "<button class=\"ds-btn-ghost\">Cancel</button> <button class=\"ds-btn-ghost ds-danger\">Delete</button>",
+      "css": ".ds-btn-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: rgba(18,16,14,.7); padding: 10px 20px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; border: 0; border-radius: 0; cursor: pointer; transition: color 160ms ease; } .ds-btn-ghost:hover { color: #7a5c1e; } .ds-btn-ghost.ds-danger { color: rgba(18,16,14,.6); } .ds-btn-ghost.ds-danger:hover { color: #9b2c2c; } .ds-btn-ghost:focus-visible { outline: 2px solid #a8853a; outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Ruled Field",
+      "kind": "input",
+      "refersTo": "field",
+      "description": "The journal's writing line: mono label over a single bottom rule that turns brass-ink on focus.",
+      "html": "<label class=\"ds-field-wrap\"><span class=\"ds-label\">Title</span><input class=\"ds-field\" placeholder=\"Iceland ring road\" /><span class=\"ds-hint\">Where the log begins.</span></label>",
+      "css": ".ds-field-wrap { display: block; width: 280px; } .ds-label { display: block; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(18,16,14,.7); } .ds-field { width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(18,16,14,.28); border-radius: 0; padding: 0.55rem 0; font-size: 1rem; line-height: 1.4; color: #12100e; caret-color: #7a5c1e; transition: border-color 160ms ease, box-shadow 160ms ease; } .ds-field::placeholder { color: rgba(18,16,14,.6); } .ds-field:focus { outline: none; border-bottom-color: #7a5c1e; box-shadow: 0 1px 0 0 #7a5c1e; } .ds-field:disabled { opacity: .5; } .ds-hint { display: block; margin-top: 4px; font-size: 0.75rem; color: rgba(18,16,14,.6); }"
+    },
+    {
+      "name": "Header Strip",
+      "kind": "nav",
+      "refersTo": "nav-link",
+      "description": "The chart's title strip on parchment: compass + engraved wordmark, mono nav, brass-ink underscore on the active sheet.",
+      "html": "<header class=\"ds-strip\"><a class=\"ds-wordmark\" href=\"#\"><svg width=\"18\" height=\"18\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"ds-compass\"><circle cx=\"8\" cy=\"8\" r=\"6.5\"/><path d=\"M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2\"/><path d=\"m10.5 5.5-1.6 3.4-3.4 1.6 1.6-3.4z\"/></svg>ATLAS</a><nav class=\"ds-nav\"><a href=\"#\">World</a><a href=\"#\">Explore</a><a href=\"#\" aria-current=\"page\">Trips</a><a href=\"#\">Passport</a></nav></header>",
+      "css": ".ds-strip { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 12px 20px; background: rgba(246,243,236,.85); backdrop-filter: blur(2px); border-bottom: 1px solid rgba(168,133,58,.5); color: #12100e; } .ds-wordmark { display: flex; align-items: center; gap: 10px; font-family: Cinzel, Georgia, serif; font-size: 1.125rem; font-weight: 700; letter-spacing: 0.12em; color: #12100e; text-decoration: none; } .ds-compass { color: #7a5c1e; } .ds-nav { display: flex; align-items: center; gap: 4px; } .ds-nav a { position: relative; padding: 8px 10px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(18,16,14,.7); text-decoration: none; transition: color 160ms ease; } .ds-nav a:hover { color: #12100e; } .ds-nav a[aria-current=page] { color: #7a5c1e; } .ds-nav a::after { content: ''; position: absolute; left: 10px; right: 10px; bottom: -13px; height: 1px; background: #7a5c1e; opacity: 0; transition: opacity 160ms ease; } .ds-nav a[aria-current=page]::after { opacity: 1; } .ds-nav a:focus-visible { outline: 2px solid #a8853a; outline-offset: 3px; border-radius: 2px; }"
+    },
+    {
+      "name": "Page Header",
+      "kind": "custom",
+      "refersTo": "display",
+      "description": "Sheet-corner note (labelSm), engraved title on a brass rule, mono marginalia (0.72rem) beneath, primary action on the rule.",
+      "html": "<header class=\"ds-page\"><div class=\"ds-corner\"><span></span><span class=\"ds-sheet\">Sheet 01 · Trips</span></div><div class=\"ds-rule\"><div><h1 class=\"ds-h1\">Trips</h1><p class=\"ds-marginalia\">4 journeys · 2 completed</p></div><a class=\"ds-btn-primary\" href=\"#\">New trip</a></div></header>",
+      "css": ".ds-page { width: 560px; color: #12100e; } .ds-corner { display: flex; justify-content: space-between; margin-bottom: 12px; } .ds-sheet { font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.62rem; letter-spacing: 0.12em; text-transform: uppercase; font-variant-numeric: tabular-nums; color: rgba(18,16,14,.7); } .ds-rule { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding-bottom: 16px; border-bottom: 1px solid rgba(168,133,58,.6); } .ds-h1 { margin: 0; font-family: Cinzel, Georgia, serif; font-size: clamp(1.85rem, 4vw, 2.5rem); font-weight: 600; line-height: 1.1; letter-spacing: 0.025em; text-wrap: balance; } .ds-marginalia { margin: 8px 0 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(18,16,14,.7); } .ds-btn-primary { display: inline-flex; background: #12100e; color: #f6f3ec; padding: 10px 20px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; text-decoration: none; transition: background-color 160ms ease; } .ds-btn-primary:hover { background: #2a2622; }"
+    },
+    {
+      "name": "Cartouche Plate (paper)",
+      "kind": "card",
+      "refersTo": "plate-paper",
+      "description": "The only container: a white wash, an ink hairline, four brass corner ticks. Dashed for an empty page.",
+      "html": "<div class=\"ds-plate\"><i class=\"ds-tick ds-tl\"></i><i class=\"ds-tick ds-tr\"></i><i class=\"ds-tick ds-bl\"></i><i class=\"ds-tick ds-br\"></i><p class=\"ds-plate-title\">The log is blank</p><p class=\"ds-plate-body\">Every journey starts as a line in this book. Write the first one.</p></div>",
+      "css": ".ds-plate { position: relative; width: 420px; padding: 24px; background: rgba(255,255,255,.35); border: 1px solid rgba(18,16,14,.15); border-radius: 0; color: #12100e; text-align: center; } .ds-plate.ds-dashed { border-style: dashed; } .ds-tick { position: absolute; width: 10px; height: 10px; margin: -2px; border: 0 solid #a8853a; pointer-events: none; } .ds-tl { left: 0; top: 0; border-left-width: 1px; border-top-width: 1px; } .ds-tr { right: 0; top: 0; border-right-width: 1px; border-top-width: 1px; } .ds-bl { left: 0; bottom: 0; border-left-width: 1px; border-bottom-width: 1px; } .ds-br { right: 0; bottom: 0; border-right-width: 1px; border-bottom-width: 1px; } .ds-plate-title { margin: 0; font-family: Cinzel, Georgia, serif; font-size: 1.25rem; font-weight: 600; } .ds-plate-body { margin: 8px auto 0; max-width: 28rem; font-size: 0.875rem; line-height: 1.5; color: rgba(18,16,14,.6); }"
+    },
+    {
+      "name": "Ruled List Row",
+      "kind": "custom",
+      "refersTo": "figure",
+      "description": "A log entry: mono metadata column, status dot, sans title, drawn arrow that turns brass-ink on hover.",
+      "html": "<ol class=\"ds-list\"><li class=\"ds-row\"><div class=\"ds-meta\">IS<span>Jun 12 — Jun 24, 2026</span></div><a class=\"ds-entry\" href=\"#\"><i class=\"ds-dot ds-planned\"></i><span class=\"ds-entry-title\">Iceland ring road</span><svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"ds-arrow\"><path d=\"M3 8h10M9 4l4 4-4 4\"/></svg></a></li><li class=\"ds-row\"><div class=\"ds-meta\">JP<span>Nov 02 — Nov 16, 2025</span></div><a class=\"ds-entry\" href=\"#\"><i class=\"ds-dot ds-visited\"></i><span class=\"ds-entry-title\">Japan, autumn leaves</span><svg width=\"14\" height=\"14\" viewBox=\"0 0 16 16\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.5\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"ds-arrow\"><path d=\"M3 8h10M9 4l4 4-4 4\"/></svg></a></li></ol>",
+      "css": ".ds-list { list-style: none; margin: 0; padding: 0; width: 560px; border-top: 1px solid rgba(18,16,14,.15); color: #12100e; } .ds-row { display: grid; grid-template-columns: 9rem 1fr; align-items: center; column-gap: 16px; border-bottom: 1px solid rgba(18,16,14,.15); } .ds-meta { padding: 16px 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(18,16,14,.7); } .ds-meta span { display: block; margin-top: 4px; letter-spacing: 0; text-transform: none; color: rgba(18,16,14,.6); } .ds-entry { display: flex; align-items: center; gap: 12px; padding: 16px 0; color: inherit; text-decoration: none; transition: color 160ms ease; } .ds-entry:hover { color: #7a5c1e; } .ds-entry-title { font-size: 1.125rem; font-weight: 500; line-height: 1.25; } .ds-dot { width: 8px; height: 8px; border-radius: 999px; flex: none; } .ds-planned { background: #fbbf24; } .ds-visited { background: #34d399; } .ds-arrow { margin-left: auto; color: rgba(18,16,14,.5); transition: transform 160ms ease, color 160ms ease; } .ds-entry:hover .ds-arrow { transform: translateX(2px); color: #7a5c1e; }"
+    },
+    {
+      "name": "Tally Row",
+      "kind": "custom",
+      "refersTo": "headline",
+      "description": "Mono label, dotted leader, engraved tabular figure — the profile's tally.",
+      "html": "<dl class=\"ds-tally\"><div class=\"ds-tally-row\"><dt>Countries</dt><span class=\"ds-leader\"></span><dd>12</dd></div><div class=\"ds-tally-row\"><dt>Distance</dt><span class=\"ds-leader\"></span><dd>48,210 km</dd></div></dl>",
+      "css": ".ds-tally { width: 420px; margin: 0; color: #12100e; } .ds-tally-row { display: flex; align-items: baseline; gap: 12px; padding: 16px 0; border-bottom: 1px solid rgba(18,16,14,.15); } .ds-tally-row dt { flex: none; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(18,16,14,.7); } .ds-leader { flex: 1; min-width: 24px; margin-bottom: 0.35em; border-bottom: 1px dotted rgba(18,16,14,.35); } .ds-tally-row dd { margin: 0; flex: none; font-family: Cinzel, Georgia, serif; font-size: 2.25rem; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Country Mark",
+      "kind": "chip",
+      "refersTo": "country-mark",
+      "description": "ISO code in mono inside a hairline square; replaces flag emoji everywhere.",
+      "html": "<span class=\"ds-mark\">IS</span> <span class=\"ds-mark ds-md\">JP</span>",
+      "css": ".ds-mark { display: inline-grid; place-items: center; width: 32px; height: 32px; border: 1px solid rgba(18,16,14,.3); border-radius: 0; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.62rem; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; line-height: 1; color: rgba(18,16,14,.8); } .ds-mark.ds-md { width: 48px; height: 48px; font-size: 1rem; letter-spacing: 0.14em; }"
+    },
+    {
+      "name": "Status Mark",
+      "kind": "chip",
+      "refersTo": "label",
+      "description": "An 8px dot in the globe's state hue plus a mono word; the same hue means the same thing everywhere.",
+      "html": "<span class=\"ds-status\"><i class=\"ds-dot\" style=\"background:#34d399\"></i>Completed</span> <span class=\"ds-status\"><i class=\"ds-dot ds-underway\"></i>Underway</span> <span class=\"ds-status\"><i class=\"ds-dot ds-cancelled\"></i>Cancelled</span>",
+      "css": ".ds-status { display: inline-flex; align-items: center; gap: 8px; margin-right: 16px; font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace; font-size: 0.68rem; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: rgba(18,16,14,.7); } .ds-dot { display: inline-block; width: 8px; height: 8px; border-radius: 999px; } .ds-underway { background: #fbbf24; box-shadow: 0 0 0 2px rgba(251,191,36,.3); } .ds-cancelled { background: transparent; border: 1px solid rgba(18,16,14,.4); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Night Chart and the Journal Behind It",
+    "overview": "The ATLAS landing establishes a Night Sea-Chart world: the product presented as a working nautical/aeronautical navigation chart at night, with the real interactive globe glowing at its center. This is the Persuade surface's identity. The in-app screens (world, explore, trips, saved, passport, profile) are the journal behind the chart: parchment pages under a soft top light, ruled like a ship's log. They share the chart's roles (ink, parchment, brass, graticule, the three state colors), its two faces (engraved Cinzel titles, JetBrains Mono marginalia), and its one container grammar (the cartouche: a hairline with four brass corner ticks). What changes between the two is the ground — night ink on the landing, parchment inside — and, because of that, the weight of brass: bright brass on the dark chart, a duller brass for rules and an ink-brass for text on paper.\n\nThe interior refuses the admin-panel default. There are no card grids, stat tiles, pills or badges, no sidebar shell. Content is set as ruled lists, ledgers (<table> with a double rule above the total) and tallies (<dl> with a dotted leader), the way a log book divides a page. Every measurement — dates, ISO codes, counts, coordinates, amounts — is mono marginalia; prose is the system sans; only titles and figures are engraved. Density is moderate: a single 896px column, generous row height, and one authored motion moment per sheet.",
+    "keyCharacteristics": [
+      "Two grounds, one world: night chart (`chart`) for the landing and map plates; parchment with a top light everywhere else.",
+      "Brass in three weights, chosen by ground: bright on ink, plain for rules, ink-brass for text on paper.",
+      "Cinzel for titles and figures only; JetBrains Mono for every measurement; system sans for prose.",
+      "Rules instead of boxes: hairlines, brass rules, double rules, dotted leaders. The cartouche plate is the only container.",
+      "Sharp corners throughout; depth by tone and line, never by shadow.",
+      "Drawn 1.5px round-stroke icons on a 16-unit grid; ISO code marks instead of flag emoji.",
+      "One authored motion moment per page; everything else arrives already laid out."
+    ],
+    "rules": [
+      {
+        "name": "The Three Brasses Rule",
+        "body": "Brass is picked by ground, not by taste: `brass-bright` on ink grounds only; `brass` for rules and ticks on parchment; `brass-ink` for any brass that is read. Bright brass never touches parchment as text.",
+        "section": "colors"
+      },
+      {
+        "name": "The Same-Hue-Same-Meaning Rule",
+        "body": "`visited`, `planned` and `wishlist` carry one meaning across the globe, the legend, trip status marks and stamps. No other hue is assigned to a status.",
+        "section": "colors"
+      },
+      {
+        "name": "The Paper Carries No Lattice Rule",
+        "body": "The interior ground is parchment with one radial top light and nothing else; the cyan graticule exists only on `Plate tone=\"chart\"`, a map surface. (The direction contract's OWN-WORLD text in `layout.tsx` still says \"a faint graticule drawn into the paper\"; the build dropped it, and the build wins.)",
+        "section": "colors"
+      },
+      {
+        "name": "The Contrast Floor Rule",
+        "body": "Secondary prose is ink/60 or darker (4.8:1); small mono labels are ink/70 or darker; brass text is `brass-ink`. Nothing lighter carries words.",
+        "section": "colors"
+      },
+      {
+        "name": "The Marginalia Rule",
+        "body": "Anything that is a measurement — a date, an ISO code, a count, a coordinate, an amount, a sheet number — is set in mono, tabular. Mono is never used for prose or for \"tech\" flavour.",
+        "section": "typography"
+      },
+      {
+        "name": "The Engraved-Only-When-Named Rule",
+        "body": "Cinzel appears on the page title, engraved figures and stamps. It is never used for buttons, labels, body copy or row titles.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Kicker Rule",
+        "body": "Nothing sits above an `<h1>` but the sheet-corner note (data) and the back link. The line under the title is marginalia — counts, dates, coordinates — never a category word.",
+        "section": "typography"
+      },
+      {
+        "name": "The Font Cascade Rule",
+        "body": "`--font-display` and `--font-mono` are set on `<html>` by `next/font` (`lib/fonts.ts`). Never redeclare them in `:root`; a `:root` declaration has the same specificity and, arriving later, silently replaces both faces with Georgia and the system mono.",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Shadow Rule",
+        "body": "Nothing casts a shadow. If a surface needs to read as separate, give it a hairline and the corner ticks, or a different ground.",
+        "section": "elevation"
+      },
+      {
+        "name": "The Rule Hierarchy Rule",
+        "body": "Line weight and tone encode importance: brass rule = the page; double rule = a sum; ink/25 = a head; ink/15 = a row; ink/10 = a ledger line; dotted ink/35 = a leader.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do open every sheet with the header strip, the engraved `<h1>` over a `brass`/60 rule, and mono marginalia beneath it; put the page's one primary action on that rule, wearing the cartouche ticks.",
+      "Do set every measurement — dates, ISO codes, counts, coordinates, amounts, sheet numbers — in JetBrains Mono, tabular, at the `label` or `figure` role.",
+      "Do lay out records as ruled lists, ledgers (`<table>`) or tallies (`<dl>`) on hairlines; group with `Section` (a mono head on a rule), and reach for `Plate` only when content genuinely needs a frame.",
+      "Do pick brass by ground: `brass-bright` on ink, `brass` for lines on parchment, `brass-ink` for anything read on parchment.",
+      "Do keep secondary prose at ink/60 or darker and small mono at ink/70 or darker; use `danger-ink` for errors as text, not as a filled surface.",
+      "Do use the `.field` ruled line for every text input, select and textarea, with a mono `Label` above.",
+      "Do give each page at most one authored motion moment on the `[0.22, 1, 0.36, 1]` curve; let rows arrive laid out.",
+      "Do label countries with `CountryMark` (mono ISO code in a hairline square) and draw icons at 1.5px on the 16-unit grid."
+    ],
+    "donts": [
+      "Don't build card grids, stat tiles, pills, badges, chips or a sidebar shell; the interior is a page, not a dashboard.",
+      "Don't put a kicker, eyebrow or category word above or beneath an `<h1>`; the only line under a title is data.",
+      "Don't cast shadows or round corners; depth is tone and line, and the only round things are dots, rings and postmarks.",
+      "Don't put `brass-bright` text on parchment (1.8:1), or use plain `brass` for words.",
+      "Don't draw the cyan graticule into the parchment; it belongs to `Plate tone=\"chart\"` and the globe only.",
+      "Don't redeclare `--font-display` or `--font-mono` in `:root`; they are set on `<html>` by `next/font`.",
+      "Don't use flag emoji, glyph-character icons, icon fonts, or Cinzel for buttons, labels or prose.",
+      "Don't give every list row its own entrance animation, or add a second accent hue for a status."
+    ]
+  }
+}

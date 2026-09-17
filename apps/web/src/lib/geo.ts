@@ -95,3 +95,17 @@ export function pointsView(points: GeoPoint[]): {
   const altitude = Math.min(2.5, Math.max(0.6, spread / 20 + 0.5));
   return { lat, lng, altitude };
 }
+
+/**
+ * Chart-style coordinates for marginalia: 64°08′N · 21°56′W. Degrees and
+ * minutes, hemisphere letters — the way a sheet's corner is labelled.
+ */
+export function formatCoordinates(lat: number, lng: number): string {
+  const dm = (v: number) => {
+    const abs = Math.abs(v);
+    const deg = Math.floor(abs);
+    const min = Math.round((abs - deg) * 60);
+    return `${deg}°${String(min).padStart(2, "0")}′`;
+  };
+  return `${dm(lat)}${lat >= 0 ? "N" : "S"} · ${dm(lng)}${lng >= 0 ? "E" : "W"}`;
+}

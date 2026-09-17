@@ -1,46 +1,66 @@
 "use client";
 
-import Link from "next/link";
 import { usePassport } from "@/lib/discovery-hooks";
 import { PassportStamp } from "@/components/passport-stamp";
+import {
+  ButtonLink,
+  EmptyState,
+  Note,
+  PageHeader,
+  Plate,
+} from "@/components/ui/primitives";
 
 export default function PassportPage() {
   const { data: stamps, isLoading } = usePassport();
 
+  const first = stamps?.length
+    ? stamps
+        .map((s) => (s.firstVisitedAt ? new Date(s.firstVisitedAt) : null))
+        .filter((d): d is Date => Boolean(d))
+        .sort((a, b) => a.getTime() - b.getTime())[0]
+    : null;
+
   return (
     <section className="space-y-8">
-      <div>
-        <p className="text-sm uppercase tracking-[0.25em] text-ink/40">
-          Your passport
-        </p>
-        <h1 className="mt-1 text-4xl font-semibold tracking-tight">
-          Everywhere you&apos;ve been
-        </h1>
-      </div>
+      <PageHeader
+        corner="Sheet 03 · Passport"
+        title="Passport"
+        marginalia={
+          stamps && stamps.length > 0
+            ? `${stamps.length} ${stamps.length === 1 ? "stamp" : "stamps"}${
+                first
+                  ? ` · first entry ${first.toLocaleDateString(undefined, {
+                      month: "short",
+                      year: "numeric",
+                    })}`
+                  : ""
+              }`
+            : "Everywhere you've been"
+        }
+      />
 
-      {isLoading && <p className="text-ink/60">Loading stamps…</p>}
+      {isLoading && <Note>Turning the pages…</Note>}
 
       {stamps && stamps.length === 0 && (
-        <div className="rounded-2xl border border-dashed border-ink/20 p-12 text-center">
-          <p className="text-lg font-medium">No stamps yet</p>
-          <p className="mt-1 text-sm text-ink/60">
-            Mark a trip as completed to earn your first passport stamp.
-          </p>
-          <Link
-            href="/trips"
-            className="mt-4 inline-block rounded-full bg-ink px-5 py-2.5 text-sm font-medium text-parchment"
-          >
-            Go to your trips
-          </Link>
-        </div>
+        <EmptyState
+          title="No stamps yet"
+          body="Mark a trip as completed and its country is stamped in here — the passport fills as you go."
+          action={
+            <ButtonLink href="/trips" variant="primary" cartouche>
+              Go to your trips
+            </ButtonLink>
+          }
+        />
       )}
 
       {stamps && stamps.length > 0 && (
-        <div className="flex flex-wrap gap-6">
-          {stamps.map((stamp, i) => (
-            <PassportStamp key={stamp.code} stamp={stamp} index={i} />
-          ))}
-        </div>
+        <Plate className="p-8 sm:p-12">
+          <div className="flex flex-wrap justify-center gap-8 sm:justify-start">
+            {stamps.map((stamp, i) => (
+              <PassportStamp key={stamp.code} stamp={stamp} index={i} />
+            ))}
+          </div>
+        </Plate>
       )}
     </section>
   );

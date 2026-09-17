@@ -5,6 +5,15 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ExpenseCategory } from "@atlas/types";
 import { useAddExpense, useDeleteExpense, useExpenses } from "@/lib/hooks";
 import type { ExpenseDTO, ExpenseTotal } from "@/lib/types";
+import {
+  Button,
+  EmptyState,
+  Field,
+  Label,
+  Note,
+  Plate,
+} from "@/components/ui/primitives";
+import { Close } from "@/components/ui/icons";
 
 const CATEGORY_LABEL: Record<string, string> = {
   FLIGHT: "Flight",
@@ -30,6 +39,12 @@ const fmtMoney = (amount: number, currency: string) => {
   }
 };
 
+const fmtDate = (iso: string) =>
+  new Date(iso).toLocaleDateString(undefined, {
+    day: "2-digit",
+    month: "short",
+  });
+
 /** Per-currency roll-up, derived from the list so the ledger has one source. */
 function totalsByCurrency(expenses: ExpenseDTO[]): ExpenseTotal[] {
   const byCurrency = new Map<string, number>();
@@ -52,42 +67,61 @@ export function ExpensesPanel({ tripId }: { tripId: string }) {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       <ExpenseForm tripId={tripId} />
 
-      {totals.length > 0 && (
-        <div className="flex flex-wrap gap-3">
-          {totals.map((t) => (
-            <div
-              key={t.currency}
-              className="rounded-2xl border border-ink/10 bg-white/50 px-5 py-3"
-            >
-              <p className="text-[0.65rem] font-medium uppercase tracking-[0.18em] text-ink/45">
-                Total · {t.currency}
-              </p>
-              <p className="mt-0.5 text-2xl font-semibold tabular-nums">
-                {fmtMoney(t.total, t.currency)}
-              </p>
-            </div>
-          ))}
-        </div>
-      )}
-
       {isLoading ? (
-        <p className="text-sm text-ink/50">Loading expenses…</p>
+        <Note>Opening the ledger…</Note>
       ) : (expenses?.length ?? 0) === 0 ? (
-        <p className="rounded-xl border border-dashed border-ink/20 p-8 text-center text-ink/60">
-          No expenses logged yet. Add flights, lodging, food and more to see
-          what this trip costs.
-        </p>
+        <EmptyState
+          title="The ledger is empty"
+          body="Log flights, lodging, meals and the rest as you go — the trip's cost adds itself up here, per currency."
+        />
       ) : (
-        <ul className="divide-y divide-ink/10 overflow-hidden rounded-2xl border border-ink/10 bg-white/40">
-          <AnimatePresence initial={false}>
-            {expenses!.map((e) => (
-              <ExpenseRow key={e.id} tripId={tripId} expense={e} />
+        <table className="w-full border-collapse">
+          <thead>
+            <tr className="border-b border-ink/25">
+              <th className="hidden w-20 py-2 text-left sm:table-cell">
+                <Label as="span">Date</Label>
+              </th>
+              <th className="w-28 py-2 text-left">
+                <Label as="span">Kind</Label>
+              </th>
+              <th className="py-2 text-left">
+                <Label as="span">Note</Label>
+              </th>
+              <th className="py-2 text-right">
+                <Label as="span">Amount</Label>
+              </th>
+              <th className="w-8" aria-label="Actions" />
+            </tr>
+          </thead>
+          <tbody>
+            <AnimatePresence initial={false}>
+              {expenses!.map((e) => (
+                <ExpenseRow key={e.id} tripId={tripId} expense={e} />
+              ))}
+            </AnimatePresence>
+          </tbody>
+          <tfoot>
+            {totals.map((t, i) => (
+              <tr
+                key={t.currency}
+                className={i === 0 ? "border-t-[3px] border-double border-ink/60" : ""}
+              >
+                {/* Date column placeholder — hidden on mobile like its header. */}
+                <td className="hidden sm:table-cell" />
+                <td colSpan={2} className="pr-4 pt-3 text-right">
+                  <Label as="span">Total · {t.currency}</Label>
+                </td>
+                <td className="whitespace-nowrap pt-3 text-right font-mono text-base font-medium tabular-nums text-ink">
+                  {fmtMoney(t.total, t.currency)}
+                </td>
+                <td />
+              </tr>
             ))}
-          </AnimatePresence>
-        </ul>
+          </tfoot>
+        </table>
       )}
     </div>
   );
@@ -121,77 +155,75 @@ function ExpenseForm({ tripId }: { tripId: string }) {
   };
 
   return (
-    <form
-      onSubmit={submit}
-      className="flex flex-wrap items-end gap-3 rounded-2xl border border-ink/10 bg-white/40 p-4"
-    >
-      <label className="flex flex-col gap-1">
-        <span className="text-[0.65rem] font-medium uppercase tracking-[0.15em] text-ink/45">
-          Amount
-        </span>
-        <input
-          type="number"
-          inputMode="decimal"
-          min="0"
-          step="0.01"
-          required
-          value={amount}
-          onChange={(ev) => setAmount(ev.target.value)}
-          placeholder="0.00"
-          className="w-28 rounded-lg border border-ink/15 bg-white/70 px-3 py-2 text-sm tabular-nums"
-        />
-      </label>
-
-      <label className="flex flex-col gap-1">
-        <span className="text-[0.65rem] font-medium uppercase tracking-[0.15em] text-ink/45">
-          Currency
-        </span>
-        <input
-          value={currency}
-          onChange={(ev) => setCurrency(ev.target.value.toUpperCase().slice(0, 3))}
-          maxLength={3}
-          className="w-20 rounded-lg border border-ink/15 bg-white/70 px-3 py-2 text-sm uppercase"
-        />
-      </label>
-
-      <label className="flex flex-col gap-1">
-        <span className="text-[0.65rem] font-medium uppercase tracking-[0.15em] text-ink/45">
-          Category
-        </span>
-        <select
-          value={category}
-          onChange={(ev) => setCategory(ev.target.value)}
-          className="rounded-lg border border-ink/15 bg-white/70 px-3 py-2 text-sm"
-        >
-          {CATEGORIES.map((c) => (
-            <option key={c} value={c}>
-              {CATEGORY_LABEL[c] ?? c}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <label className="flex flex-1 flex-col gap-1" style={{ minWidth: "12rem" }}>
-        <span className="text-[0.65rem] font-medium uppercase tracking-[0.15em] text-ink/45">
-          Note
-        </span>
-        <input
-          value={description}
-          onChange={(ev) => setDescription(ev.target.value)}
-          placeholder="e.g. Round-trip flight"
-          maxLength={280}
-          className="rounded-lg border border-ink/15 bg-white/70 px-3 py-2 text-sm"
-        />
-      </label>
-
-      <button
-        type="submit"
-        disabled={addExpense.isPending || !amount}
-        className="rounded-lg bg-ink px-4 py-2 text-sm font-medium text-parchment disabled:opacity-50"
+    <Plate className="p-5 sm:p-6">
+      <form
+        onSubmit={submit}
+        className="grid grid-cols-2 items-end gap-x-5 gap-y-5 sm:grid-cols-[7rem_5rem_9rem_1fr_auto]"
       >
-        {addExpense.isPending ? "Adding…" : "Add expense"}
-      </button>
-    </form>
+        <Field label="Amount">
+          <input
+            type="number"
+            inputMode="decimal"
+            min="0"
+            step="0.01"
+            required
+            value={amount}
+            onChange={(ev) => setAmount(ev.target.value)}
+            placeholder="0.00"
+            className="field font-mono tabular-nums"
+          />
+        </Field>
+
+        <Field label="Currency">
+          <input
+            value={currency}
+            onChange={(ev) =>
+              setCurrency(ev.target.value.toUpperCase().slice(0, 3))
+            }
+            maxLength={3}
+            className="field font-mono uppercase tracking-[0.15em]"
+          />
+        </Field>
+
+        <Field label="Kind">
+          <select
+            value={category}
+            onChange={(ev) => setCategory(ev.target.value)}
+            className="field"
+          >
+            {CATEGORIES.map((c) => (
+              <option key={c} value={c}>
+                {CATEGORY_LABEL[c] ?? c}
+              </option>
+            ))}
+          </select>
+        </Field>
+
+        <Field label="Note" className="col-span-2 sm:col-span-1">
+          <input
+            value={description}
+            onChange={(ev) => setDescription(ev.target.value)}
+            placeholder="e.g. Round-trip flight"
+            maxLength={280}
+            className="field"
+          />
+        </Field>
+
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={addExpense.isPending || !amount}
+          className="col-span-2 sm:col-span-1"
+        >
+          {addExpense.isPending ? "Entering…" : "Enter"}
+        </Button>
+      </form>
+      {addExpense.isError && (
+        <Note tone="error" className="mt-3">
+          {(addExpense.error as Error).message}
+        </Note>
+      )}
+    </Plate>
   );
 }
 
@@ -205,32 +237,36 @@ function ExpenseRow({
   const deleteExpense = useDeleteExpense(tripId);
 
   return (
-    <motion.li
+    <motion.tr
       layout
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, height: 0 }}
-      className="flex items-center gap-4 px-4 py-3"
+      exit={{ opacity: 0 }}
+      className="border-b border-ink/10"
     >
-      <span className="rounded-full border border-ink/15 px-2.5 py-0.5 text-[0.65rem] font-medium uppercase tracking-[0.12em] text-ink/60">
+      <td className="hidden whitespace-nowrap py-3 pr-3 align-top font-mono text-[0.68rem] uppercase tracking-label text-ink/70 sm:table-cell">
+        {fmtDate(expense.createdAt)}
+      </td>
+      <td className="py-3 pr-3 align-top font-mono text-[0.68rem] uppercase tracking-label text-ink/70">
         {CATEGORY_LABEL[expense.category] ?? expense.category}
-      </span>
-      <span className="flex-1 truncate text-sm text-ink/80">
-        {expense.description || (
-          <span className="text-ink/40">No note</span>
-        )}
-      </span>
-      <span className="text-sm font-semibold tabular-nums">
+      </td>
+      <td className="py-3 pr-3 align-top text-sm text-ink/85">
+        {expense.description || <span className="text-ink/55">—</span>}
+      </td>
+      <td className="whitespace-nowrap py-3 text-right align-top font-mono text-sm tabular-nums text-ink">
         {fmtMoney(expense.amount, expense.currency)}
-      </span>
-      <button
-        onClick={() => deleteExpense.mutate(expense.id)}
-        disabled={deleteExpense.isPending}
-        title="Delete expense"
-        className="text-xs text-ink/40 hover:text-red-700 disabled:opacity-40"
-      >
-        ✕
-      </button>
-    </motion.li>
+      </td>
+      <td className="py-2 text-right align-top">
+        <button
+          onClick={() => deleteExpense.mutate(expense.id)}
+          disabled={deleteExpense.isPending}
+          aria-label="Delete expense"
+          title="Delete expense"
+          className="p-1 text-ink/50 transition hover:text-[#9b2c2c] disabled:opacity-40"
+        >
+          <Close size={13} />
+        </button>
+      </td>
+    </motion.tr>
   );
 }

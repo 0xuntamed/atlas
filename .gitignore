@@ -42,3 +42,6 @@ coverage/
 crash.log
 *.tfvars
 !*.tfvars.example
+
+# impeccable finish-review screenshots (QA artifacts)
+.impeccable/review/

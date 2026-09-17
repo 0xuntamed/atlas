@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 import Link from "next/link";
+import clsx from "clsx";
 import { ClerkProvider, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { isMockAuth } from "@/lib/auth-mode";
 
@@ -11,51 +12,49 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   return <ClerkProvider>{children}</ClerkProvider>;
 }
 
-function AppNavLinks() {
-  return (
-    <>
-      <Link href="/world" className="hover:underline">
-        World
-      </Link>
-      <Link href="/countries" className="hover:underline">
-        Explore
-      </Link>
-      <Link href="/trips" className="hover:underline">
-        Trips
-      </Link>
-      <Link href="/saved" className="hover:underline">
-        Saved
-      </Link>
-      <Link href="/passport" className="hover:underline">
-        Passport
-      </Link>
-      <Link href="/profile" className="hover:underline">
-        Profile
-      </Link>
-    </>
-  );
-}
-
-/** Header nav auth controls. */
-export function HeaderAuth() {
+/**
+ * Header auth control. Primary navigation lives in the site header; this only
+ * renders the identity affordance (a "dev" mark in mock mode, Clerk's user
+ * button or a sign-in link otherwise).
+ */
+export function HeaderAuth({ onChart = false }: { onChart?: boolean }) {
   if (isMockAuth) {
     return (
-      <>
-        <AppNavLinks />
-        <span className="rounded-full bg-ink/10 px-2.5 py-1 text-xs text-ink/60">
-          dev
-        </span>
-      </>
+      <span
+        title="Mock auth — shared dev user"
+        className={clsx(
+          "inline-flex items-center gap-1.5 border px-2 py-1 font-mono text-[0.62rem] uppercase tracking-label",
+          onChart
+            ? "border-graticule/30 text-parchment/70"
+            : "border-ink/20 text-ink/70",
+        )}
+      >
+        <span
+          aria-hidden
+          className={clsx(
+            "h-1.5 w-1.5 rounded-full",
+            onChart ? "bg-brass-bright" : "bg-brass-ink",
+          )}
+        />
+        dev
+      </span>
     );
   }
   return (
     <>
       <SignedIn>
-        <AppNavLinks />
         <UserButton afterSignOutUrl="/" />
       </SignedIn>
       <SignedOut>
-        <Link href="/sign-in" className="hover:underline">
+        <Link
+          href="/sign-in"
+          className={clsx(
+            "font-mono text-[0.68rem] font-medium uppercase tracking-label transition",
+            onChart
+              ? "text-parchment/70 hover:text-parchment"
+              : "text-ink/70 hover:text-ink",
+          )}
+        >
           Sign in
         </Link>
       </SignedOut>
