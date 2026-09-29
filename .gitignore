@@ -35,13 +35,6 @@ Thumbs.db
 # misc
 coverage/
 
-# terraform
-**/.terraform/
-*.tfstate
-*.tfstate.*
-crash.log
-*.tfvars
-!*.tfvars.example
 
 # impeccable finish-review screenshots (QA artifacts)
 .impeccable/review/

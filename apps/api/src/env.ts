@@ -26,8 +26,6 @@ const envSchema = z.object({
     .default("false")
     .transform((v) => v === "true" || v === "1"),
   APP_VERSION: z.string().default("0.1.0"),
-  // Optional error-monitoring DSN (Sentry etc.). No-op when unset.
-  SENTRY_DSN: z.string().url().optional(),
 
   // "mock" (default) skips Clerk entirely and resolves every request to a dev
   // user — lets the app run with no external setup. Switch to "clerk" once real

@@ -179,7 +179,7 @@ Presentation only — no architecture changes. Uses `framer-motion`.
   `Reorder` + a drag handle); positions persist via the trip-place endpoint.
 - **Page transitions** — `app/template.tsx` gives every route a quiet entrance.
 
-## Production + deployment (Phase 5)
+## Production hardening (Phase 5)
 
 The API is production-hardened:
 
@@ -192,28 +192,6 @@ The API is production-hardened:
   (503 when the DB is unreachable).
 - **Env validation** — the server refuses to boot on invalid config.
 - **`trustProxy`** — honors `X-Forwarded-*` behind a load balancer.
-- **Error seam** — all unhandled errors flow through `reportError` (wire Sentry
-  in one place via `SENTRY_DSN`).
-
-**CI** (`.github/workflows/ci.yml`): on push/PR, a Postgres service starts, then
-`install → migrate → lint → typecheck → test → build`.
-
-### Deploying — Option A (recommended)
-
-| Piece | Host | How |
-| ----- | ---- | --- |
-| Web (`apps/web`) | Vercel | Import repo, root `apps/web`, set `NEXT_PUBLIC_*` env |
-| API (`apps/api`) | Render / Railway | From source or the `apps/api/Dockerfile`; run `pnpm db:deploy` on release |
-| Postgres | Neon / Supabase | Set `DATABASE_URL` on the API |
-
-Set `AUTH_MODE=clerk` + Clerk keys, `WEB_ORIGIN` to the Vercel URL, and
-`NODE_ENV=production` on the API.
-
-### Deploying — Option B (AWS, optional)
-
-`docker build -f apps/api/Dockerfile -t atlas-api .` → push to ECR → the
-Terraform in `infra/terraform/` provisions VPC + RDS + ALB + ECS Fargate. See
-[infra/terraform/README.md](infra/terraform/README.md). No Kubernetes.
 
 ## Completion flows
 
@@ -225,5 +203,3 @@ Terraform in `infra/terraform/` provisions VPC + RDS + ALB + ECS Fargate. See
   same itinerary. Visit `/world` to see countries colored by your travel state.
 - **Phase 4** — mark a trip completed → a passport stamp appears and lands in
   `/passport`; `/profile` fills with your travel stats.
-- **Phase 5** — `docker build` + run the API container → `/health` reports
-  `db:up`; CI runs the full pipeline; Terraform `validate` passes for dev + prod.

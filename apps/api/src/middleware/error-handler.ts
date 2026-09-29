@@ -3,7 +3,6 @@ import { Prisma } from "@prisma/client";
 import { ZodError } from "zod";
 import { ErrorCode, type ApiErrorBody } from "@atlas/types";
 import { AppError } from "../lib/errors";
-import { reportError } from "../lib/observability";
 
 function envelope(
   code: ErrorCode,
@@ -63,11 +62,15 @@ export function registerErrorHandler(app: FastifyInstance) {
         .send(envelope(ErrorCode.VALIDATION_ERROR, err.message));
     }
 
-    reportError(req.log, err, {
-      reqId: req.id,
-      userId: req.auth?.userId,
-      route: req.routeOptions?.url ?? req.url,
-    });
+    req.log.error(
+      {
+        err,
+        reqId: req.id,
+        userId: req.auth?.userId,
+        route: req.routeOptions?.url ?? req.url,
+      },
+      "unhandled_error",
+    );
     return reply
       .code(500)
       .send(envelope(ErrorCode.INTERNAL_ERROR, "Something went wrong"));
